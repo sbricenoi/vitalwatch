@@ -1,0 +1,127 @@
+# ============================================================================
+# VitalWatch - GitIgnore
+# ============================================================================
+
+# ============================================================================
+# ARCHIVOS SENSIBLES - NO SUBIR A GITHUB
+# ============================================================================
+
+# Oracle Wallet (contiene credenciales)
+Wallet_S58ONUXCX4C1QXE9/
+*.zip
+*.sso
+*.jks
+*.ora
+ojdbc.properties
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# Contraseñas y credenciales
+**/application-*.properties
+!**/application.properties.example
+
+# ============================================================================
+# BACKEND (Spring Boot / Maven)
+# ============================================================================
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.project
+.classpath
+.settings/
+.metadata/
+bin/
+
+# ============================================================================
+# FRONTEND (Angular / Node)
+# ============================================================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+dist/
+dist-ssr/
+build/
+.angular/
+.cache/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Angular
+.angular/cache
+
+# ============================================================================
+# DOCKER
+# ============================================================================
+
+# Docker volumes
+docker-compose.override.yml
+.docker/
+
+# ============================================================================
+# SISTEMA OPERATIVO
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.nfs*
+
+# ============================================================================
+# TEMPORALES Y BACKUPS
+# ============================================================================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# ============================================================================
+# OTROS
+# ============================================================================
+
+# Archivos temporales de documentación
+PRUEBA_*.md
+TEMP_*.md

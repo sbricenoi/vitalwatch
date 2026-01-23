@@ -1,0 +1,138 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.card {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.logo-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  i {
+    color: white;
+  }
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-control-lg {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
+.test-credentials {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+
+  h6 {
+    font-weight: 600;
+  }
+}
+
+.credential-card {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+  }
+}
+
+.credential-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    color: white;
+    font-size: 1.2rem;
+  }
+}
+
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+.alert-danger {
+  background-color: #fee;
+  color: #c00;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .login-container {
+    padding: 10px;
+  }
+
+  .card-body {
+    padding: 2rem 1.5rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .logo-circle {
+    width: 60px;
+    height: 60px;
+
+    i {
+      font-size: 2rem !important;
+    }
+  }
+}

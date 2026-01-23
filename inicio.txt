@@ -1,0 +1,203 @@
+Estimad@s estudiantes, 
+
+ 
+
+Bienvenidas y bienvenidos a la Semana 3 de su asignatura Desarrollo Cloud Native I. Estamos terminando con la exploración de la Experiencia 2: Conceptos básicos de un API Manager y de un servicio Identity as a Service 
+
+ 
+
+En esta tercera semana deberán realizar de manera grupal (2 integrantes) la actividad 
+
+sumativa de la Experiencia 1, llamada "Construyendo una solución Cloud Native completa 
+
+considerando la gestión de usuario y componentes”. Para la primera tendrán que entregar en 
+
+un archivo comprimido (.rar o .zip) los componentes creados con el código fuente de la 
+
+aplicación para el BackEnd. Para la segunda parte deberán hacer una presentación, a través 
+
+de un video para mostrar el correcto funcionamiento de sus microservicios, ejecución y 
+
+pruebas mediante POSTMAN, así como verificación de que la información este siendo 
+
+manipulada y almacenada en una Base de Datos Oracle 
+
+ 
+
+Instrucciones específicas 
+
+ 
+
+Parte I: Documentación 
+
+ 
+
+1. Deberán entregar en un archivo comprimido (.rar o .zip) los componentes creados. El 
+
+comprimido deberá contener el código fuente de la aplicación. 
+
+ 
+
+2. Los microservicios creados deben cumplir con los siguientes aspectos: 
+
+✅  Deben ser desarrollados bajo el Framework Spring con spring boot. 
+
+✅ Manejo y organización del utilizando herramientas colaborativas y de repositorios 
+
+en GIT. 
+
+✅  Los microservicios deben usar una conexión a una Base de Datos en Oracle 
+
+donde estén construidas sus respectivas tablas para manipular su información. 
+
+✅ Debe implementar todos los controladores necesarios para manipular las 
+
+comunicaciones con RESTful (get,post,put,delete). 
+
+✅  Debe manipular POSTMAN para poder validar el correcto funcionamiento de las 
+
+consultar. 
+
+ 
+
+ 
+
+Para la creación del sistema deberán tener en cuenta lo siguiente en el caso asignado 
+
+ 
+
+Caso 
+
+ 
+
+“Desarrollar un sistema de alertas médicas en tiempo real para un hospital que gestione 
+
+señales vitales de pacientes críticos.”. Corresponde a un sistema conformado por un 
+
+componente frontend y varios componentes backend. 
+
+ 
+
+Alcance del requerimiento: 
+
+ 
+
+✅Frontend: 
+
+o El sistema tendrá un login implementando mediante un Identity as a Service. 
+
+o Para el diseño de la aplicación FrontEnd deberás elegir los colores, logos, nombre 
+
+e imágenes a implementar en su desarrollo. Puedes guiarse de páginas ya 
+
+existentes, pero sin dejar de lado su originalidad. También pueden usar cualquier 
+
+herramienta de diseño de imágenes como Photoshop, gimp, illustrator o que estén 
+
+en la web. 
+
+o En cuanto a los formularios, todos deben tener sus validaciones correspondientes 
+
+para cada campo, puedes guiarte de cualquier aplicación donde se haya 
+
+registrado para usar las validaciones necesarias. 
+
+o Para manipular la información a mostrar en el FrontEnd o guardar información, se 
+
+deben comunicar con los microservicios y funciones desarrollados mediante el 
+
+uso de APIs. 
+
+✅Backend: 
+
+o El sistema debería tener securitizado el backend mediante spring security en 
+
+el BFF. 
+
+o El sistema deberá contar como mínimo con un componente Microservicio BFF. 
+
+✅API Manager: 
+
+o Todos los endpoints del BFF deberían estar registrados en el API Manager. 
+
+ 
+
+Deberán usar Docker para su desarrollo y deben tomar en consideración al momento 
+
+de probar su desarrollo final cambiar las urls de las APIs de comunicación a las que 
+
+genera Docker Lab una vez que los hayan subido y puesto a funcionar en el mismo 
+
+ 
+
+Las funcionalidades especificas las deben decidir uds como grupo 
+
+ 
+
+Recomendaciones para el video. 
+
+ 
+
+Parte II: Presentación 
+
+ 
+
+Para la presentación de su desarrollo BackEnd deberán usar la herramienta de Teams, 
+
+mostrando el correcto funcionamiento de sus microservicios, ejecución y pruebas mediante 
+
+POSTMAN, así como verificación de que la información este siendo manipulada y 
+
+almacenada en una Base de Datos Oracle. Es importante destacar que deben mostrar en 
+
+tiempo real todas las funcionalidades requeridas del desarrollo donde se cumplan todos los 
+
+requerimientos solicitados del caso. 
+
+ 
+
+Recuerda: Considera esta información que se especificó en la introducción de la semana, antes de rendir tu actividad. 
+
+ 
+
+1. Para la realización de esta actividad, revisa los materiales de aprendizaje y/o lecturas de esta semana.   
+
+2. Descarga los archivos adjuntos y lee con detenimiento.  
+
+3. Esta actividad está dividida en dos (2) partes.  
+
+4. Para la Parte I, guarda el archivo con la siguiente nomenclatura:   
+
+EXP_Sx_nombre_del_grupo  
+
+Ejemplo: Exp1_S3_grupo4  
+
+5. Para adjuntar el archivo correspondiente, dentro de la actividad selecciona “inicia aquí” y luego pincha el cuadro para adjuntar o arrastrar el archivo que vas a subir desde tu equipo. Presiona “guardar” y finalmente “enviar” para culminar la entrega. Cuentas con un solo intento para esto.  
+
+6. Para la Parte II, deberás presentar y grabar la presentación de los documentos que estás haciendo entrega. Esta presentación la realizarás usando la herramienta de Teams.  
+
+7. Recuerda que esta evaluación es grupal y sumativa – 40% de la Experiencia. 
+
+8. Consulta la pauta de evaluación para saber cómo serás evaluado/a. 
+
+ 
+
+Quedará cargado en el Foro de Consultas Semana 3 los recursos necesarios para apoyar el desarrollo de esta actividad. No olvidar dejar sus dudas en el foro para responder 
+
+ 
+
+🎥 La sesión sincrónica 🎥 de esta semana será el día miercoles 21 de enero a las 20:00 hrs.  
+
+En caso de no poder asistir, se enviará el link con la grabación 
+
+ 
+
+ 
+
+Revisaremos los siguientes puntos 🌟 🌟 🌟 🌟 : 
+
+ 
+
+🙈 Integración del IDaaS con API Gateway 
+
+ 

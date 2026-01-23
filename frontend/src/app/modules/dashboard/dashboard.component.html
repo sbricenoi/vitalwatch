@@ -1,0 +1,142 @@
+<div class="dashboard-container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="mb-4">
+        <strong>Dashboard - VitalWatch</strong>
+      </h1>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="spinner-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+
+  <!-- Tarjetas de estadísticas -->
+  <div *ngIf="!cargando && !error" class="row mb-4">
+    <!-- Total Pacientes -->
+    <div class="col-md-3 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-muted">Total Pacientes</h5>
+          <h2 class="mb-0">{{ estadisticas.totalPacientes || 0 }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pacientes Críticos -->
+    <div class="col-md-3 mb-3">
+      <div class="card border-danger">
+        <div class="card-body">
+          <h5 class="card-title text-danger">Pacientes Críticos</h5>
+          <h2 class="mb-0 text-danger">{{ estadisticas.pacientesCriticos || 0 }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas Activas -->
+    <div class="col-md-3 mb-3">
+      <div class="card border-warning">
+        <div class="card-body">
+          <h5 class="card-title text-warning">Alertas Activas</h5>
+          <h2 class="mb-0 text-warning">{{ estadisticas.alertasActivas || 0 }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas Críticas -->
+    <div class="col-md-3 mb-3">
+      <div class="card border-danger">
+        <div class="card-body">
+          <h5 class="card-title text-danger">Alertas Críticas</h5>
+          <h2 class="mb-0 text-danger">{{ estadisticas.alertasCriticas || 0 }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!cargando && !error" class="row">
+    <!-- Alertas Recientes -->
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">🔔 Alertas Recientes</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="alertasRecientes.length === 0" class="text-center text-muted py-4">
+            No hay alertas recientes
+          </div>
+          <div *ngFor="let alerta of alertasRecientes" class="alert-card mb-3"
+               [ngClass]="getSeveridadClass(alerta.severidad)">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>{{ alerta.tipo }}</strong>
+                <p class="mb-0">{{ alerta.mensaje }}</p>
+                <small class="text-muted">
+                  Paciente: {{ alerta.pacienteNombre || 'ID: ' + alerta.pacienteId }}
+                  <span *ngIf="alerta.pacienteSala"> | Sala {{ alerta.pacienteSala }} - {{ alerta.pacienteCama }}</span>
+                </small>
+              </div>
+              <span class="badge" [ngClass]="getSeveridadClass(alerta.severidad)">
+                {{ alerta.severidad }}
+              </span>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <a routerLink="/alertas" class="btn btn-outline-primary">
+              Ver todas las alertas
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pacientes Críticos -->
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">⚠️ Pacientes Críticos</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="pacientesCriticos.length === 0" class="text-center text-muted py-4">
+            No hay pacientes en estado crítico
+          </div>
+          <div *ngFor="let paciente of pacientesCriticos" class="mb-3 p-3 border-start border-danger border-4">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="mb-1">
+                  {{ paciente.nombre }} {{ paciente.apellido }}
+                </h6>
+                <p class="mb-1 text-muted">
+                  <small>
+                    <strong>Sala:</strong> {{ paciente.sala || 'N/A' }} - 
+                    <strong>Cama:</strong> {{ paciente.cama || 'N/A' }}
+                  </small>
+                </p>
+                <p class="mb-0">
+                  <small>{{ paciente.diagnostico || 'Sin diagnóstico' }}</small>
+                </p>
+              </div>
+              <span [ngClass]="getEstadoClass(paciente.estado)">
+                {{ paciente.estado }}
+              </span>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <a routerLink="/pacientes" class="btn btn-outline-danger">
+              Ver todos los pacientes
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

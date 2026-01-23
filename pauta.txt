@@ -1,0 +1,71 @@
+Semana 3
+Desarrollo Cloud Native I (DSY2206)
+
+
+Pauta de evaluación sumativa
+ 
+Construyendo una solución Cloud Native completa considerando la gestión de usuario y componentes.
+A continuación, se presentan los descriptores de los niveles de logro con lo que serás retroalimentado/a y/o evaluado/a:
+CL	Completamente Logrado (100%)  	Logro completo del manejo del indicador, se considera como el punto óptimo, de acuerdo al área evaluada, dentro del rango de competente
+L	Logrado (80%)	Logro del indicador, se observan pequeñas dificultades o errores para alcanzar el logro total y sobresaliendo de lo mínimo aceptable
+ML	Medianamente Logrado (60%)	Logro mínimo aceptable en el manejo del indicador que permite ser considerado competente
+LI	Logro Insuficiente (30%)	Logro insuficiente en el manejo del indicador, se observan varias dificultades o errores que no le permiten alcanzar el logro mínimo para ser considerado competente
+NL	No Logrado (0%)	Se observan un escaso, nulo o incorrecto logro en el manejo del indicador
+ 
+Nº	Criterios	Completamente Logrado (100%)	Logrado
+(80%)	Medianamente Logrado (60%)	Logro Insuficiente
+(30%)	No Logrado
+(0%)
+1	Usa herramientas de trabajo colaborativo y repositorios en git para el desarrollo de aplicaciones en equipo de trabajo. (Valor 10 puntos) 	Usa correctamente herramientas de trabajo colaborativo y repositorios en git para el manejo y organización del desarrollo de aplicaciones con la participación equitativa de los integrantes.
+(Valor 10 puntos)	Usa correctamente herramientas de trabajo colaborativo y repositorios en git, pero presenta algunos errores en el manejo y organización del desarrollo de aplicaciones con la participación equitativa de los integrantes.
+(Valor 8 puntos)	Usa correctamente herramientas de trabajo colaborativo y repositorios en git, pero presenta algunos errores en el manejo y organización del desarrollo de aplicaciones y no se evidencia la participación equitativa de los integrantes.
+(Valor 6 puntos)	Presenta errores en el uso de las herramientas de trabajo colaborativo y repositorios en git, en el manejo y organización del desarrollo de aplicaciones y no se evidencia la participación equitativa de los integrantes.
+(Valor 3 puntos)	No aplica el uso de herramientas de trabajo colaborativo ni repositorios en git. 
+(Valor 0 puntos)
+2	Desarrolla los microservicios solicitados con Springboot
+(Valor 15 puntos) 
+	Desarrolla el BackEnd de la aplicación de manera completa y sin errores.
+(Valor 15 puntos)	Desarrolla con 20 % de errores los microservicios solicitados con Springboot.
+(Valor 12 puntos)	Desarrolla con 40% de errores los microservicios solicitados con Springboot.
+(Valor 9 puntos)	Desarrolla con 70% de errores los microservicios solicitados con Springboot.
+(Valor 4,5 puntos)	No desarrolla los microservicios solicitados con Springboot.
+(Valor 0 puntos)
+3	Desarrolla el frontend solicitado con Angular
+(Valor 15 puntos)	Desarrolla el FrontEnd de la aplicación de manera completa y sin errores.
+(Valor 15 puntos)	Desarrolla con 20 % de errores el FrontEnd solicitado con Angular.
+(Valor 12 puntos)	Desarrolla con 40 % de errores el FrontEnd solicitado con Angular.
+(Valor 9 puntos)	Desarrolla con 70 % de errores el FrontEnd solicitado con Angular. (Valor 4,5 puntos)	No desarrolla el FrontEnd solicitado con Angular.
+(Valor 0 puntos)
+4	Integra el uso del API Manager en las API generadas en el proyecto
+(Valor 25 puntos)
+	Integra correctamente el uso del API Manager en las API generadas en el proyecto.
+(Valor 25 puntos)
+	Integra con un 20% de errores el uso del API Manager en las API generadas en el proyecto.
+(Valor 20 puntos)	Integra con un 40% de errores el uso del API Manager en las API generadas en el proyecto.
+(Valor 15 puntos)
+	Integra con un 70% de errores el uso del API Manager en las API generadas en el proyecto.
+(Valor 7,5 puntos)
+	No Integra el uso del API Manager en las API generadas en el proyecto
+(Valor 0 puntos)
+
+
+5	Integra el uso de un IdaaS para manejar la autenticación y seguridad del aplicativo.
+(Valor 25 puntos)  	Integra de manera completa el uso de un IdaaS para manejar la autenticación y seguridad del aplicativo.
+(Valor 25 puntos)	Integra con 20% de errores el uso de un IdaaS para manejar la autenticación y seguridad del aplicativo.
+(Valor 20 puntos)	Integra con 40% de errores el uso de un IdaaS para manejar la autenticación y seguridad del aplicativo.
+(Valor 15 puntos)
+	Integra con 70% de errores el uso de un IdaaS para manejar la autenticación y seguridad del aplicativo.
+(Valor 7,5 puntos)
+
+	No integra el uso de un IdaaS para manejar la autenticación y seguridad del aplicativo.
+(Valor 0 puntos)
+
+6	Presenta mediante el video abarcando todos los puntos solicitados (despliegue en cloud, ejecución mediante la url pública, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las integraciones.
+(Dominio del tema, Que el desarrollo sea correcto, Cumplimiento de los tiempos de presentación, puntos requeridos) 
+(Valor 10 puntos) 	Presenta de manera completa mediante el video abarcando el 100% de los puntos solicitados (despliegue en cloud, ejecución mediante la url pública, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las opciones tanto del FrontEnd como del BackEnd.
+(Valor 10 puntos)
+	Presenta de manera completa mediante el video abarcando al menos el 80% de los puntos solicitados (despliegue en cloud, ejecución mediante la url pública, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las opciones tanto del FrontEnd como del BackEnd.
+(Valor 8 puntos)	Presenta de manera completa mediante el video abarcando al menos el 60% de los puntos solicitados (despliegue en cloud, ejecución mediante la url pública, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las opciones tanto del FrontEnd como del BackEnd.
+(Valor 6 puntos)	Presenta de manera completa mediante el video abarcando al menos el 30% de los puntos solicitados (despliegue en cloud, ejecución mediante la url pública, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las opciones tanto del FrontEnd como del BackEnd.
+(Valor 3 puntos)	No elabora la presentación mediante el vídeo.
+(Valor 0 puntos)

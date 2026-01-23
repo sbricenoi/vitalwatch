@@ -1,0 +1,128 @@
+<div class="login-container">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-6">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-5">
+          <!-- Logo y Título -->
+          <div class="text-center mb-4">
+            <div class="logo-circle mb-3">
+              <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 3rem;"></i>
+            </div>
+            <h2 class="fw-bold text-primary mb-2">VitalWatch</h2>
+            <p class="text-muted">Sistema de Alertas Médicas en Tiempo Real</p>
+          </div>
+
+          <!-- Mensaje de Error -->
+          <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ error }}
+            <button type="button" class="btn-close" (click)="error=''" aria-label="Close"></button>
+          </div>
+
+          <!-- Formulario de Login -->
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label fw-semibold">
+                <i class="bi bi-envelope me-2"></i>Email
+              </label>
+              <input
+                type="email"
+                class="form-control form-control-lg"
+                id="email"
+                formControlName="email"
+                placeholder="usuario@vitalwatch.com"
+                [class.is-invalid]="f['email'].invalid && f['email'].touched"
+                autocomplete="email"
+              />
+              <div class="invalid-feedback" *ngIf="f['email'].invalid && f['email'].touched">
+                <span *ngIf="f['email'].errors?.['required']">El email es obligatorio</span>
+                <span *ngIf="f['email'].errors?.['email']">Email inválido</span>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+              <label for="password" class="form-label fw-semibold">
+                <i class="bi bi-lock me-2"></i>Contraseña
+              </label>
+              <input
+                type="password"
+                class="form-control form-control-lg"
+                id="password"
+                formControlName="password"
+                placeholder="••••••••"
+                [class.is-invalid]="f['password'].invalid && f['password'].touched"
+                autocomplete="current-password"
+              />
+              <div class="invalid-feedback" *ngIf="f['password'].invalid && f['password'].touched">
+                <span *ngIf="f['password'].errors?.['required']">La contraseña es obligatoria</span>
+                <span *ngIf="f['password'].errors?.['minlength']">Mínimo 6 caracteres</span>
+              </div>
+            </div>
+
+            <!-- Botón Submit -->
+            <div class="d-grid mb-3">
+              <button
+                type="submit"
+                class="btn btn-primary btn-lg"
+                [disabled]="loading"
+              >
+                <span *ngIf="!loading">
+                  <i class="bi bi-box-arrow-in-right me-2"></i>
+                  Iniciar Sesión
+                </span>
+                <span *ngIf="loading">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Iniciando sesión...
+                </span>
+              </button>
+            </div>
+          </form>
+
+          <hr class="my-4">
+
+          <!-- Credenciales de Prueba -->
+          <div class="test-credentials">
+            <h6 class="text-muted mb-3 text-center">
+              <i class="bi bi-info-circle me-2"></i>
+              Credenciales de Prueba
+            </h6>
+            <div class="row g-2">
+              <div class="col-12" *ngFor="let cred of testCredentials">
+                <div class="credential-card" (click)="fillCredentials(cred)">
+                  <div class="d-flex align-items-center">
+                    <div class="credential-icon me-3">
+                      <i class="bi" [ngClass]="{
+                        'bi-shield-fill': cred.tipo === 'Admin',
+                        'bi-person-fill-gear': cred.tipo === 'Médico',
+                        'bi-person-plus-fill': cred.tipo === 'Enfermera'
+                      }"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="fw-semibold">{{ cred.tipo }}</div>
+                      <div class="small text-muted">{{ cred.email }}</div>
+                    </div>
+                    <div class="text-end">
+                      <button type="button" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-cursor-fill me-1"></i>
+                        Usar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="text-center mt-4">
+            <p class="small text-muted mb-0">
+              © 2026 VitalWatch. Sistema de Alertas Médicas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

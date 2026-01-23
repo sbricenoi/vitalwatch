@@ -1,0 +1,26 @@
+// Estilos del componente raíz
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  
+  &.active {
+    font-weight: 700;
+  }
+}
+
+main {
+  min-height: calc(100vh - 200px);
+}
+
+footer {
+  margin-top: auto;
+}

@@ -1,0 +1,898 @@
+{
+	"info": {
+		"_postman_id": "vitalwatch-api-collection-2026",
+		"name": "VitalWatch - Sistema de Alertas Médicas API",
+		"description": "Colección completa de endpoints para el sistema VitalWatch.\n\nBase de Datos: Oracle Cloud Autonomous Database (s58onuxcx4c1qxe9)\nRegión: Santiago, Chile (sa-santiago-1)\n\n## Configuración Inicial\n\n1. Importar esta colección en Postman\n2. Configurar las variables de entorno\n3. Obtener token JWT desde IdaaS\n4. Probar endpoints\n\n## Variables de Entorno Requeridas\n\n- `base_url`: http://localhost:8080 (desarrollo) o URL del API Gateway en producción\n- `api_version`: v1\n- `jwt_token`: Token JWT obtenido desde Auth0/Keycloak\n\n## Autenticación\n\nTodos los endpoints (excepto health) requieren:\n```\nAuthorization: Bearer {{jwt_token}}\n```",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/actuator/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Verifica el estado de salud de la aplicación."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pacientes",
+			"item": [
+				{
+					"name": "Listar Todos los Pacientes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/pacientes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"pacientes"
+							]
+						},
+						"description": "Obtiene la lista completa de todos los pacientes registrados en el sistema."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Paciente por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/pacientes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"pacientes",
+								"1"
+							]
+						},
+						"description": "Obtiene el detalle completo de un paciente específico por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Nuevo Paciente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rut\": \"12345678-9\",\n  \"fechaNacimiento\": \"1958-05-15\",\n  \"edad\": 65,\n  \"genero\": \"M\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-01\",\n  \"estado\": \"CRÍTICO\",\n  \"diagnostico\": \"Insuficiencia cardíaca congestiva\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/pacientes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"pacientes"
+							]
+						},
+						"description": "Registra un nuevo paciente en el sistema.\n\n**Validaciones:**\n- nombre: requerido, mínimo 2 caracteres\n- apellido: requerido, mínimo 2 caracteres\n- rut: requerido, formato válido\n- edad: requerido, entre 0 y 120\n- genero: M, F, O\n- estado: ESTABLE, MODERADO, CRÍTICO, RECUPERACIÓN"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Paciente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rut\": \"12345678-9\",\n  \"fechaNacimiento\": \"1958-05-15\",\n  \"edad\": 65,\n  \"genero\": \"M\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-02\",\n  \"estado\": \"MODERADO\",\n  \"diagnostico\": \"Insuficiencia cardíaca - mejorando\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/pacientes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"pacientes",
+								"1"
+							]
+						},
+						"description": "Actualiza la información de un paciente existente."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Paciente",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/pacientes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"pacientes",
+								"1"
+							]
+						},
+						"description": "Elimina (soft delete) un paciente del sistema. El paciente no se elimina físicamente, solo se marca como inactivo."
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pacientes por Estado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/pacientes/estado/CRÍTICO",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"pacientes",
+								"estado",
+								"CRÍTICO"
+							]
+						},
+						"description": "Filtra pacientes por su estado.\n\nEstados válidos: ESTABLE, MODERADO, CRÍTICO, RECUPERACIÓN"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pacientes por Sala",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/pacientes/sala/UCI",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"pacientes",
+								"sala",
+								"UCI"
+							]
+						},
+						"description": "Filtra pacientes por sala hospitalaria."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Signos Vitales",
+			"item": [
+				{
+					"name": "Obtener Signos Vitales por Paciente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales/paciente/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales",
+								"paciente",
+								"1"
+							]
+						},
+						"description": "Obtiene el historial completo de signos vitales de un paciente específico."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Último Registro de Signos Vitales",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales/paciente/1/ultimo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales",
+								"paciente",
+								"1",
+								"ultimo"
+							]
+						},
+						"description": "Obtiene el registro más reciente de signos vitales de un paciente."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Signo Vital por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales",
+								"1"
+							]
+						},
+						"description": "Obtiene un registro específico de signos vitales por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Signos Vitales",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 1,\n  \"frecuenciaCardiaca\": 85,\n  \"presionSistolica\": 120,\n  \"presionDiastolica\": 80,\n  \"temperatura\": 36.8,\n  \"saturacionOxigeno\": 98,\n  \"frecuenciaRespiratoria\": 16,\n  \"estadoConciencia\": \"ALERTA\",\n  \"observaciones\": \"Paciente estable, sin novedades\",\n  \"registradoPor\": \"Enfermera García\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales"
+							]
+						},
+						"description": "Registra nuevos signos vitales para un paciente.\n\n**Validaciones:**\n- frecuenciaCardiaca: 0-300 bpm\n- presionSistolica: 0-300 mmHg\n- presionDiastolica: 0-200 mmHg\n- temperatura: 30.0-45.0 °C\n- saturacionOxigeno: 0-100 %\n- frecuenciaRespiratoria: 0-100 rpm\n- estadoConciencia: ALERTA, VERBAL, DOLOR, INCONSCIENTE\n\n**Nota:** Si los valores están fuera de rangos normales, se generará automáticamente una alerta."
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Signos Vitales - Valores Anormales",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 1,\n  \"frecuenciaCardiaca\": 125,\n  \"presionSistolica\": 165,\n  \"presionDiastolica\": 95,\n  \"temperatura\": 38.9,\n  \"saturacionOxigeno\": 88,\n  \"frecuenciaRespiratoria\": 28,\n  \"estadoConciencia\": \"VERBAL\",\n  \"observaciones\": \"Paciente agitado, taquicárdico, desaturación\",\n  \"registradoPor\": \"Enfermera López\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales"
+							]
+						},
+						"description": "Ejemplo de registro con valores anormales que generará alertas críticas automáticamente:\n- FC: 125 (>120) → CRÍTICA\n- Presión: 165/95 (>160/90) → CRÍTICA\n- Temperatura: 38.9 (>38.5) → CRÍTICA\n- SpO2: 88 (<90) → CRÍTICA\n- FR: 28 (>25) → CRÍTICA"
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Signos Vitales",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 1,\n  \"frecuenciaCardiaca\": 78,\n  \"presionSistolica\": 118,\n  \"presionDiastolica\": 76,\n  \"temperatura\": 36.6,\n  \"saturacionOxigeno\": 97,\n  \"frecuenciaRespiratoria\": 16,\n  \"estadoConciencia\": \"ALERTA\",\n  \"observaciones\": \"Paciente estabilizado\",\n  \"registradoPor\": \"Enfermera García\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales",
+								"1"
+							]
+						},
+						"description": "Actualiza un registro existente de signos vitales (corrección de datos)."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Signos Vitales",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales",
+								"1"
+							]
+						},
+						"description": "Elimina un registro de signos vitales (soft delete)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Alertas",
+			"item": [
+				{
+					"name": "Listar Todas las Alertas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas"
+							]
+						},
+						"description": "Obtiene todas las alertas del sistema (activas y resueltas)."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Alertas Activas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/activas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas",
+								"activas"
+							]
+						},
+						"description": "Obtiene solo las alertas con estado ACTIVA que requieren atención."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Alertas Críticas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/criticas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas",
+								"criticas"
+							]
+						},
+						"description": "Obtiene solo las alertas con severidad CRÍTICA."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Alertas por Paciente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/paciente/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas",
+								"paciente",
+								"1"
+							]
+						},
+						"description": "Obtiene todas las alertas de un paciente específico."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Alerta por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas",
+								"1"
+							]
+						},
+						"description": "Obtiene el detalle completo de una alerta específica."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Alerta Manual",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 1,\n  \"tipo\": \"ALERTA_MANUAL\",\n  \"mensaje\": \"Paciente reporta dolor abdominal intenso\",\n  \"severidad\": \"MODERADA\",\n  \"observaciones\": \"Solicita evaluación médica urgente\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas"
+							]
+						},
+						"description": "Crea una alerta manual (no generada automáticamente por el sistema).\n\nSeveridades: BAJA, MODERADA, CRÍTICA"
+					},
+					"response": []
+				},
+				{
+					"name": "Resolver Alerta",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"resueltoPor\": \"Dr. Ramírez\",\n  \"notasResolucion\": \"Se administró medicación antihipertensiva. Presión arterial normalizada. Paciente estable.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/1/resolver",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas",
+								"1",
+								"resolver"
+							]
+						},
+						"description": "Marca una alerta como RESUELTA y registra quién la resolvió y las notas de resolución."
+					},
+					"response": []
+				},
+				{
+					"name": "Descartar Alerta",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"resueltoPor\": \"Enfermera Silva\",\n  \"notasResolucion\": \"Falsa alarma. Error en el registro de signos vitales.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/1/descartar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas",
+								"1",
+								"descartar"
+							]
+						},
+						"description": "Marca una alerta como DESCARTADA (falsa alarma o error)."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Alerta",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"alertas",
+								"1"
+							]
+						},
+						"description": "Elimina una alerta del sistema (solo para administradores)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard & Estadísticas",
+			"item": [
+				{
+					"name": "Obtener Estadísticas del Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/dashboard/estadisticas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"dashboard",
+								"estadisticas"
+							]
+						},
+						"description": "Obtiene estadísticas generales para el dashboard:\n- Total de pacientes\n- Pacientes críticos\n- Alertas activas\n- Alertas críticas"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Resumen de Pacientes por Estado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/dashboard/pacientes-por-estado",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"dashboard",
+								"pacientes-por-estado"
+							]
+						},
+						"description": "Obtiene el conteo de pacientes agrupados por estado (ESTABLE, MODERADO, CRÍTICO, RECUPERACIÓN)."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Alertas Recientes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/dashboard/alertas-recientes?limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"dashboard",
+								"alertas-recientes"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Obtiene las alertas más recientes (por defecto últimas 10)."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Script pre-request global",
+					"// Puedes agregar lógica para renovar tokens JWT automáticamente aquí",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Tests globales",
+					"pm.test(\"Status code is 200 or 201\", function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+					"});",
+					"",
+					"pm.test(\"Response has traceId\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData).to.have.property('traceId');",
+					"});",
+					"",
+					"pm.test(\"Response has code\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData).to.have.property('code');",
+					"});",
+					"",
+					"pm.test(\"Response has message\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData).to.have.property('message');",
+					"});",
+					"",
+					"pm.test(\"Response has data\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(jsonData).to.have.property('data');",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "api_version",
+			"value": "v1",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "YOUR_JWT_TOKEN_HERE",
+			"type": "string"
+		}
+	]
+}

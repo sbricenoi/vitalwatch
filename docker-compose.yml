@@ -1,0 +1,198 @@
+version: '3.8'
+
+# ============================================================================
+# VitalWatch - Sistema de Alertas Médicas en Tiempo Real
+# Docker Compose Configuration
+# ============================================================================
+
+services:
+  # ==========================================================================
+  # BACKEND - Spring Boot Application (BFF)
+  # ==========================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vitalwatch-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Oracle Cloud Database Configuration (con Wallet usando JKS)
+      - ORACLE_USERNAME=ADMIN
+      - ORACLE_PASSWORD=$$-123.Sb-123
+      - TNS_ADMIN=/app/wallet
+      - JAVA_TOOL_OPTIONS=-Doracle.net.tns_admin=/app/wallet -Djavax.net.ssl.trustStore=/app/wallet/truststore.jks -Djavax.net.ssl.trustStoreType=JKS -Djavax.net.ssl.trustStorePassword=$$-123.Sb-123 -Djavax.net.ssl.keyStore=/app/wallet/keystore.jks -Djavax.net.ssl.keyStoreType=JKS -Djavax.net.ssl.keyStorePassword=$$-123.Sb-123 -Doracle.net.ssl_server_dn_match=true
+      
+      # Server Configuration
+      - SERVER_PORT=8080
+      
+      # CORS Configuration
+      - ALLOWED_ORIGINS=http://localhost:4200,http://localhost:80,http://localhost
+      
+      # Application Configuration
+      - SPRING_APPLICATION_NAME=vitalwatch-backend
+      
+    volumes:
+      - ./Wallet_S58ONUXCX4C1QXE9:/app/wallet:ro
+    networks:
+      - vitalwatch-network
+    depends_on:
+      - api-gateway
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ==========================================================================
+  # FRONTEND - Angular Application
+  # ==========================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vitalwatch-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - API_URL=http://api-gateway:8000/api/v1
+    networks:
+      - vitalwatch-network
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ==========================================================================
+  # API GATEWAY - Kong (opcional, puede usar Oracle APIM en cloud)
+  # ==========================================================================
+  api-gateway:
+    image: kong:latest
+    container_name: vitalwatch-api-gateway
+    restart: unless-stopped
+    ports:
+      - "8000:8000"  # Proxy
+      - "8001:8001"  # Admin API
+      - "8443:8443"  # Proxy SSL
+      - "8444:8444"  # Admin API SSL
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_PROXY_LISTEN=0.0.0.0:8000
+    volumes:
+      - ./api-manager/kong.yml:/kong/declarative/kong.yml
+    networks:
+      - vitalwatch-network
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ==========================================================================
+  # ORACLE DATABASE (Solo para desarrollo local - usar Oracle Cloud en prod)
+  # ==========================================================================
+  # oracle-db:
+  #   image: gvenzl/oracle-xe:latest
+  #   container_name: vitalwatch-oracle-db
+  #   restart: unless-stopped
+  #   ports:
+  #     - "1521:1521"
+  #     - "5500:5500"
+  #   environment:
+  #     - ORACLE_PASSWORD=oracle
+  #     - ORACLE_DATABASE=VITALWATCH
+  #   volumes:
+  #     - oracle-data:/opt/oracle/oradata
+  #     - ./database/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+  #     - ./database/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+  #   networks:
+  #     - vitalwatch-network
+  #   healthcheck:
+  #     test: ["CMD", "healthcheck.sh"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 10
+  #     start_period: 120s
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+networks:
+  vitalwatch-network:
+    driver: bridge
+    name: vitalwatch-network
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
+volumes:
+  oracle-data:
+    name: vitalwatch-oracle-data
+
+# ============================================================================
+# COMANDOS ÚTILES
+# ============================================================================
+# 
+# Iniciar todos los servicios:
+#   docker-compose up -d
+#
+# Ver logs de todos los servicios:
+#   docker-compose logs -f
+#
+# Ver logs de un servicio específico:
+#   docker-compose logs -f backend
+#   docker-compose logs -f frontend
+#   docker-compose logs -f api-gateway
+#
+# Detener todos los servicios:
+#   docker-compose down
+#
+# Detener y eliminar volúmenes:
+#   docker-compose down -v
+#
+# Reiniciar un servicio:
+#   docker-compose restart backend
+#
+# Ver estado de servicios:
+#   docker-compose ps
+#
+# Rebuild de imágenes:
+#   docker-compose up -d --build
+#
+# Ejecutar comando en contenedor:
+#   docker-compose exec backend bash
+#   docker-compose exec frontend sh
+#
+# Ver uso de recursos:
+#   docker stats
+# ============================================================================

@@ -1,0 +1,33 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Angular
+dist/
+.angular/
+.angular-cache/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Environment
+.env
+.env.local

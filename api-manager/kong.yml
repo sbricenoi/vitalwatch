@@ -1,0 +1,307 @@
+_format_version: "3.0"
+_transform: true
+
+###############################################################################
+# VitalWatch - API Gateway Configuration (Kong)
+###############################################################################
+# Este archivo configura Kong en modo Declarativo (DB-less)
+# Kong actúa como API Gateway centralizando todas las peticiones
+###############################################################################
+
+###############################################################################
+# SERVICIOS
+###############################################################################
+services:
+  # =========================================================================
+  # Servicio: Backend VitalWatch
+  # =========================================================================
+  - name: vitalwatch-backend
+    url: http://backend:8080
+    protocol: http
+    connect_timeout: 60000
+    write_timeout: 60000
+    read_timeout: 60000
+    retries: 5
+    
+    # -----------------------------------------------------------------------
+    # RUTAS DEL BACKEND
+    # -----------------------------------------------------------------------
+    routes:
+      # Health Check
+      - name: health-check
+        paths:
+          - /api/v1/health
+        methods:
+          - GET
+        strip_path: false
+        
+      # Pacientes
+      - name: pacientes-api
+        paths:
+          - /api/v1/pacientes
+        methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+        strip_path: false
+        
+      # Signos Vitales
+      - name: signos-vitales-api
+        paths:
+          - /api/v1/signos-vitales
+        methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+        strip_path: false
+        
+      # Alertas
+      - name: alertas-api
+        paths:
+          - /api/v1/alertas
+        methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+        strip_path: false
+        
+      # Dashboard
+      - name: dashboard-api
+        paths:
+          - /api/v1/dashboard
+        methods:
+          - GET
+        strip_path: false
+        
+      # Swagger/OpenAPI
+      - name: swagger-ui
+        paths:
+          - /swagger-ui.html
+          - /swagger-ui
+          - /v3/api-docs
+        methods:
+          - GET
+        strip_path: false
+
+###############################################################################
+# PLUGINS GLOBALES
+###############################################################################
+plugins:
+  # =========================================================================
+  # CORS - Cross-Origin Resource Sharing
+  # =========================================================================
+  - name: cors
+    config:
+      origins:
+        - http://localhost
+        - http://localhost:80
+        - http://localhost:4200
+        - http://localhost:3000
+        - "*"
+      methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+        - OPTIONS
+      headers:
+        - Accept
+        - Accept-Version
+        - Content-Length
+        - Content-MD5
+        - Content-Type
+        - Date
+        - Authorization
+        - X-Auth-Token
+      exposed_headers:
+        - X-Auth-Token
+      credentials: true
+      max_age: 3600
+      preflight_continue: false
+  
+  # =========================================================================
+  # Rate Limiting - Limitar peticiones por IP
+  # =========================================================================
+  - name: rate-limiting
+    config:
+      minute: 100
+      hour: 1000
+      policy: local
+      fault_tolerant: true
+      hide_client_headers: false
+  
+  # =========================================================================
+  # Request/Response Logging
+  # =========================================================================
+  - name: file-log
+    config:
+      path: /tmp/kong-access.log
+      reopen: true
+  
+  # =========================================================================
+  # Request Size Limiting
+  # =========================================================================
+  - name: request-size-limiting
+    config:
+      allowed_payload_size: 10
+      size_unit: megabytes
+  
+  # =========================================================================
+  # Request/Response Transformer (Headers)
+  # =========================================================================
+  - name: request-transformer
+    config:
+      add:
+        headers:
+          - X-Gateway:Kong
+          - X-Service:VitalWatch
+  
+  # =========================================================================
+  # Response Transformer (Headers de Seguridad)
+  # =========================================================================
+  - name: response-transformer
+    config:
+      add:
+        headers:
+          - X-Content-Type-Options:nosniff
+          - X-Frame-Options:SAMEORIGIN
+          - X-XSS-Protection:1; mode=block
+          - Strict-Transport-Security:max-age=31536000; includeSubDomains
+
+###############################################################################
+# CONSUMERS (Usuarios/Aplicaciones que consumen la API)
+###############################################################################
+consumers:
+  # =========================================================================
+  # Consumer: Frontend Application
+  # =========================================================================
+  - username: vitalwatch-frontend
+    custom_id: frontend-app-001
+    
+  # =========================================================================
+  # Consumer: Mobile Application
+  # =========================================================================
+  - username: vitalwatch-mobile
+    custom_id: mobile-app-001
+    
+  # =========================================================================
+  # Consumer: External Systems
+  # =========================================================================
+  - username: external-system
+    custom_id: external-sys-001
+
+###############################################################################
+# UPSTREAMS (Load Balancing - para escalar horizontalmente)
+###############################################################################
+upstreams:
+  - name: backend-upstream
+    algorithm: round-robin
+    hash_on: none
+    hash_fallback: none
+    healthchecks:
+      active:
+        type: http
+        http_path: /api/v1/health
+        timeout: 10
+        concurrency: 10
+        healthy:
+          interval: 30
+          http_statuses:
+            - 200
+            - 302
+          successes: 2
+        unhealthy:
+          interval: 30
+          http_statuses:
+            - 429
+            - 500
+            - 503
+          timeouts: 3
+          http_failures: 3
+      passive:
+        type: http
+        healthy:
+          http_statuses:
+            - 200
+            - 201
+            - 202
+            - 203
+            - 204
+            - 205
+            - 206
+            - 207
+            - 208
+            - 226
+            - 300
+            - 301
+            - 302
+            - 303
+            - 304
+            - 305
+            - 306
+            - 307
+            - 308
+          successes: 5
+        unhealthy:
+          http_statuses:
+            - 429
+            - 500
+            - 503
+          timeouts: 7
+          http_failures: 5
+    targets:
+      - target: backend:8080
+        weight: 100
+
+###############################################################################
+# NOTAS DE CONFIGURACIÓN
+###############################################################################
+#
+# CARACTERÍSTICAS CONFIGURADAS:
+# 
+# 1. CORS: Permite peticiones desde cualquier origen (*) 
+#    - En producción, especificar dominios exactos
+#
+# 2. Rate Limiting: 
+#    - 100 peticiones por minuto por IP
+#    - 1000 peticiones por hora por IP
+#
+# 3. Logging: 
+#    - Todas las peticiones se registran en /tmp/kong-access.log
+#
+# 4. Request Size: Máximo 10MB por petición
+#
+# 5. Headers de Seguridad: Se agregan automáticamente
+#
+# 6. Health Checks: Kong verifica cada 30s que el backend esté vivo
+#
+# 7. Load Balancing: Round-robin (preparado para múltiples instancias)
+#
+###############################################################################
+# ADMINISTRACIÓN DE KONG
+###############################################################################
+#
+# Admin API: http://localhost:8001
+#
+# Comandos útiles:
+#
+# Ver servicios:
+#   curl http://localhost:8001/services
+#
+# Ver rutas:
+#   curl http://localhost:8001/routes
+#
+# Ver plugins:
+#   curl http://localhost:8001/plugins
+#
+# Ver estadísticas:
+#   curl http://localhost:8001/status
+#
+# Verificar salud:
+#   curl http://localhost:8001/status
+#
+###############################################################################
