@@ -125,3 +125,7 @@ $RECYCLE.BIN/
 # Archivos temporales de documentación
 PRUEBA_*.md
 TEMP_*.md
+backend/wallet/
+Wallet_*/
+*.zip
+azure-config.env

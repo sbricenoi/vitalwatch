@@ -14,8 +14,8 @@ RUN npm install --legacy-peer-deps
 # Copiar el código fuente
 COPY . .
 
-# Construir la aplicación para producción
-RUN npm run build --prod
+# Construir la aplicación para producción (usa defaultConfiguration: production de angular.json)
+RUN npm run build -- --configuration=production
 
 # Etapa 2: Servidor Nginx
 FROM nginx:alpine

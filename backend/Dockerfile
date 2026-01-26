@@ -30,8 +30,13 @@ WORKDIR /app
 # Copiar el JAR desde la etapa de construcción
 COPY --from=build /app/target/*.jar app.jar
 
-# Crear directorio para el Wallet de Oracle
-RUN mkdir -p /app/wallet && chown -R spring:spring /app
+# Copiar el Oracle Wallet
+COPY wallet /app/wallet
+
+# Cambiar permisos (wallet necesita permisos de lectura y directorio ejecutable)
+RUN chown -R spring:spring /app && \
+    chmod 700 /app/wallet && \
+    chmod 600 /app/wallet/*
 
 # Cambiar a usuario no-root
 USER spring:spring

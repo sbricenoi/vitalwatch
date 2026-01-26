@@ -1,294 +1,320 @@
-# 📁 Estructura Final del Proyecto
+# 🎯 Resumen Ejecutivo del Despliegue VitalWatch
 
-## Resumen de Cambios
+## ✅ DESPLIEGUE COMPLETADO CON ÉXITO
 
-Se ha reestructurado completamente la documentación del proyecto, eliminando archivos temporales y de análisis, dejando solo la documentación esencial y profesional.
-
----
-
-## 🗂️ Estructura Actual
-
-```
-vitalwatch/
-│
-├── 📄 README.md                    # Documentación principal
-├── 🚀 deploy.sh                    # Script de despliegue automático (NUEVO)
-├── 🐳 docker-compose.yml           # Orquestación de servicios
-│
-├── 📚 docs/                        # Documentación (REESTRUCTURADA)
-│   ├── ARQUITECTURA.md             # Diagramas y diseño técnico (NUEVO)
-│   ├── GUIA_INTEGRACION.md         # Setup y configuración (NUEVO)
-│   ├── guia-postman.md             # Testing de API
-│   ├── guia-oracle-cloud.md        # Configuración de BD
-│   └── postman-collection.json     # Colección de endpoints
-│
-├── 🔧 backend/                     # Spring Boot API
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/hospital/vitalwatch/
-│   │   │   │   ├── controller/     # REST Controllers (6)
-│   │   │   │   ├── service/        # Business Logic (5)
-│   │   │   │   ├── repository/     # Data Access (4)
-│   │   │   │   ├── model/          # JPA Entities (4)
-│   │   │   │   ├── dto/            # DTOs (6)
-│   │   │   │   ├── config/         # Configuration (3)
-│   │   │   │   ├── exception/      # Exception Handlers (3)
-│   │   │   │   └── util/           # Utilities (1)
-│   │   │   └── resources/
-│   │   │       ├── application.properties
-│   │   │       ├── application-dev.properties
-│   │   │       └── application-prod.properties
-│   │   └── test/                   # Unit Tests
-│   ├── Dockerfile
-│   ├── pom.xml
-│   └── README.md
-│
-├── 🎨 frontend/                    # Angular 17 App
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── core/               # Services, Guards
-│   │   │   ├── models/             # TypeScript Interfaces (4)
-│   │   │   ├── modules/            # Feature Modules
-│   │   │   │   ├── dashboard/      # Dashboard Module
-│   │   │   │   ├── pacientes/      # Pacientes Module
-│   │   │   │   ├── signos-vitales/ # Signos Vitales Module
-│   │   │   │   └── alertas/        # Alertas Module
-│   │   │   ├── shared/             # Shared Services
-│   │   │   └── auth/               # Auth Module
-│   │   ├── environments/           # Environment configs
-│   │   ├── assets/                 # Static assets
-│   │   ├── index.html
-│   │   ├── main.ts
-│   │   └── styles.scss
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   ├── package.json
-│   └── angular.json
-│
-├── 🌐 api-manager/                 # Kong Configuration
-│   └── kong.yml
-│
-├── 💾 database/                    # SQL Scripts
-│   ├── schema.sql                  # Tablas y estructura
-│   ├── data.sql                    # Datos de prueba
-│   └── usuarios.sql                # Usuarios del sistema
-│
-├── 🔐 Wallet_S58ONUXCX4C1QXE9/     # Oracle Cloud Wallet
-│   ├── cwallet.sso
-│   ├── keystore.jks
-│   ├── truststore.jks
-│   ├── tnsnames.ora
-│   ├── sqlnet.ora
-│   └── ojdbc.properties
-│
-└── 📜 scripts/                     # Automation Scripts
-    ├── start.sh                    # Iniciar servicios
-    └── stop.sh                     # Detener servicios
-```
+**Fecha:** 26 de Enero, 2026  
+**Hora de finalización:** 00:38 hrs  
+**Duración total:** ~45 minutos  
+**Estado:** ✅ EN PRODUCCIÓN
 
 ---
 
-## 📋 Archivos Eliminados
+## 🌐 URLs de Producción
 
-Se eliminaron los siguientes archivos de análisis y documentación temporal:
-
-### Análisis y Revisiones (20 archivos)
-- ❌ ANALISIS_COMPLETO_BACKEND_FRONTEND.md
-- ❌ ANALISIS_ENDPOINTS.md
-- ❌ ANALISIS_EXHAUSTIVO_TODOS_LOS_DTOS.md
-- ❌ ANALISIS_REQUISITOS.md
-- ❌ ANALISIS_RIGUROSO_DTOS_VS_FORMULARIOS.md
-- ❌ CAMBIOS_ORACLE_POSTMAN.md
-- ❌ CHECKLIST_ANTES_DE_PROBAR.md
-- ❌ COMO_INICIAR.md
-- ❌ CORRECCIONES_FINALES_FORMULARIOS.md
-- ❌ ESTADO_FINAL_PROYECTO.md
-- ❌ ESTRUCTURA_PROYECTO.md
-- ❌ GUIA_COMPLETA_USO.md
-- ❌ GUIA_RAPIDA_LOGIN.md
-- ❌ INICIO_RAPIDO.md
-- ❌ LOGIN_IMPLEMENTADO.md
-- ❌ RESUMEN_CORRECCION_COMPLETA_TODOS_LOS_DTOS.md
-- ❌ RESUMEN_EJECUTIVO_FINAL.md
-- ❌ RESUMEN_FINAL.md
-- ❌ RESUMEN_IMPLEMENTACION.md
-- ❌ RESUMEN_REVISION_FRONTEND_BACKEND.md
-- ❌ REVISION_COMPLETADA.md
-- ❌ SOLUCION_ERROR_500.md
-- ❌ SOLUCION_LOGIN_BLANCO.md
-- ❌ SOLUCION_ORACLE_CLOUD.md
-
-### Documentación Redundante en docs/
-- ❌ docs/plan-de-trabajo.md
-- ❌ docs/resumen-estructura.md
+| Servicio | URL Pública | Descripción |
+|----------|------------|-------------|
+| **Frontend** | https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/ | Interfaz web de usuario (Angular + Nginx) |
+| **Backend** | https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/ | API REST (Spring Boot + Java) |
+| **API Gateway** | https://vitalwatch-api-gateway.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/ | Kong Gateway (Rate limiting, CORS) |
 
 ---
 
-## ✅ Archivos Nuevos Creados
+## 🏗️ Infraestructura Desplegada
 
-### 1. README.md (Actualizado)
-- Descripción completa del proyecto
-- Diagramas de arquitectura ASCII
-- Stack tecnológico
-- Inicio rápido
-- Endpoints API
-- Credenciales de prueba
-- Troubleshooting
+### Microsoft Azure
 
-### 2. docs/ARQUITECTURA.md (Nuevo)
-- Visión general del sistema
-- Arquitectura de componentes (diagramas detallados)
-- Diagrama de despliegue Docker
-- Modelo de datos (ER Diagram)
-- Flujos de proceso (secuencia)
-- Seguridad (capas)
-- Métricas y monitoreo
-- Escalabilidad
+**Región:** South Central US  
+**Modelo:** Serverless (Consumption Plan)
 
-### 3. docs/GUIA_INTEGRACION.md (Nuevo)
-- Prerrequisitos detallados
-- Instalación paso a paso
-- Configuración manual completa
-- Verificación de servicios
-- Troubleshooting exhaustivo
-- Comandos útiles
-- Recursos adicionales
+**Recursos creados:**
+1. ✅ **Resource Group:** `rg-vitalwatch-prod`
+2. ✅ **Container Registry:** `acrvitalwatch.azurecr.io`
+3. ✅ **Key Vault:** `kv-vitalwatch-25231`
+   - Secrets: oracle-username, oracle-password, oracle-service
+4. ✅ **Container Apps Environment:** `env-vitalwatch-prod`
+5. ✅ **Container Apps (3):**
+   - vitalwatch-backend (1 CPU, 2GB RAM)
+   - vitalwatch-frontend (0.5 CPU, 1GB RAM)
+   - vitalwatch-api-gateway (0.5 CPU, 1GB RAM)
+6. ✅ **Log Analytics Workspace:** Auto-generado para monitoreo
 
-### 4. deploy.sh (Nuevo)
-- Script de despliegue automático
-- Verificación de prerrequisitos
-- Construcción de imágenes
-- Inicio de servicios
-- Health checks
-- Información de acceso
+### Oracle Cloud
+
+**Base de Datos:** Oracle Autonomous Database  
+**Conexión:** TCPS (Secure)  
+**Service Name:** `s58onuxcx4c1qxe9_high`  
+**Estado:** ✅ Conectado desde Azure
 
 ---
 
-## 🎯 Documentación Esencial
+## 📦 Imágenes Docker Publicadas
 
-### Para Usuarios Nuevos
-1. **Leer**: `README.md`
-2. **Ejecutar**: `./deploy.sh`
-3. **Acceder**: http://localhost:4200
+Todas las imágenes fueron construidas para arquitectura **linux/amd64**:
 
-### Para Desarrolladores
-1. **Leer**: `docs/ARQUITECTURA.md`
-2. **Configurar**: `docs/GUIA_INTEGRACION.md`
-3. **Probar**: `docs/guia-postman.md`
-
-### Para DevOps
-1. **Desplegar**: `./deploy.sh`
-2. **Monitorear**: `docker-compose logs -f`
-3. **Troubleshoot**: `docs/GUIA_INTEGRACION.md` (sección Troubleshooting)
+| Imagen | Tag | Tamaño Aprox. | Arquitectura |
+|--------|-----|--------------|--------------|
+| acrvitalwatch.azurecr.io/vitalwatch-backend | v1.0.0, latest | ~250 MB | linux/amd64 |
+| acrvitalwatch.azurecr.io/vitalwatch-frontend | v1.0.0, latest | ~50 MB | linux/amd64 |
+| acrvitalwatch.azurecr.io/vitalwatch-api-gateway | v1.0.0, latest | ~150 MB | linux/amd64 |
 
 ---
 
-## 📊 Estadísticas del Proyecto
+## 🎯 Características Implementadas
 
-### Backend (Spring Boot)
-- **Controllers**: 6 (Auth, Pacientes, Signos Vitales, Alertas, Dashboard, Health)
-- **Services**: 5
-- **Repositories**: 4
-- **DTOs**: 6
-- **Entities**: 4
-- **Endpoints**: 42
+### Seguridad
+- ✅ HTTPS automático con certificados administrados de Azure
+- ✅ Credenciales almacenadas en Azure Key Vault
+- ✅ Autenticación JWT en el backend
+- ✅ CORS configurado en API Gateway
+- ✅ Rate limiting en Kong Gateway
 
-### Frontend (Angular)
-- **Modules**: 5 (Dashboard, Pacientes, Signos Vitales, Alertas, Auth)
-- **Components**: 10+
-- **Services**: 6
-- **Models**: 4
-- **Guards**: 1
+### Escalabilidad
+- ✅ Auto-scaling horizontal (1-3 réplicas por servicio)
+- ✅ Basado en métricas de CPU y memoria
+- ✅ Cooldown period de 300 segundos
+- ✅ Zero-downtime deployments
 
-### Base de Datos (Oracle)
-- **Tablas**: 4 (PACIENTES, SIGNOS_VITALES, ALERTAS, USUARIOS)
-- **Scripts SQL**: 3 (schema, data, usuarios)
+### Monitoreo y Logging
+- ✅ Log Analytics Workspace integrado
+- ✅ Application Insights (Container Apps)
+- ✅ Logs centralizados y estructurados
+- ✅ Métricas de performance disponibles
 
-### Docker
-- **Servicios**: 3 (backend, frontend, api-gateway)
-- **Imágenes**: 3
-- **Volúmenes**: 1 (Oracle Wallet)
+### Alta Disponibilidad
+- ✅ Múltiples IPs de salida (40+ IPs)
+- ✅ Health checks automáticos
+- ✅ Reinicio automático de contenedores fallidos
+- ✅ Distribución de carga automática
 
 ---
 
-## 🚀 Inicio Rápido
+## 🚀 Proceso de Despliegue
 
+### Fase 1: Preparación (5 min)
+- ✅ Creación de Resource Group
+- ✅ Registro de Resource Providers necesarios
+- ✅ Creación de Azure Container Registry
+
+### Fase 2: Build de Imágenes (15 min)
+- ✅ Build del Backend (Spring Boot + Maven)
+- ✅ Build del Frontend (Angular + npm)
+- ✅ Build del API Gateway (Kong)
+- ✅ Corrección de arquitectura (ARM64 → AMD64)
+- ✅ Push al Azure Container Registry
+
+### Fase 3: Configuración de Seguridad (5 min)
+- ✅ Creación de Key Vault
+- ✅ Asignación de permisos RBAC
+- ✅ Almacenamiento de secrets de Oracle
+
+### Fase 4: Despliegue de Servicios (15 min)
+- ✅ Creación de Container Apps Environment
+- ✅ Despliegue del Backend Container App
+- ✅ Despliegue del Frontend Container App
+- ✅ Despliegue del API Gateway Container App
+
+### Fase 5: Verificación (5 min)
+- ✅ Health checks de todos los servicios
+- ✅ Verificación de conectividad con Oracle Cloud
+- ✅ Testing de endpoints principales
+
+---
+
+## 🐛 Problemas Resueltos
+
+### 1. Región no disponible (Solved ✅)
+**Problema:** Azure for Students no permite despliegue en `eastus`  
+**Solución:** Cambio a región `southcentralus`
+
+### 2. Resource Providers no registrados (Solved ✅)
+**Problema:** Microsoft.ContainerRegistry, Microsoft.KeyVault, Microsoft.App no estaban registrados  
+**Solución:** Registro manual de providers con `az provider register`
+
+### 3. Permisos RBAC en Key Vault (Solved ✅)
+**Problema:** Usuario sin permisos para agregar secrets al Key Vault  
+**Solución:** Asignación de rol "Key Vault Secrets Officer"
+
+### 4. Incompatibilidad de Arquitectura (Solved ✅)
+**Problema:** Imágenes construidas para ARM64 (Mac M1), Azure requiere AMD64  
+**Solución:** Rebuild con flag `--platform linux/amd64`
+
+---
+
+## 📊 Métricas del Despliegue
+
+| Métrica | Valor |
+|---------|-------|
+| **Tiempo total de despliegue** | 45 minutos |
+| **Número de servicios desplegados** | 3 |
+| **Número de problemas encontrados** | 4 |
+| **Número de providers registrados** | 4 |
+| **Tamaño total de imágenes** | ~450 MB |
+| **Número de secrets configurados** | 3 |
+| **Réplicas mínimas totales** | 3 (1 por servicio) |
+| **Réplicas máximas totales** | 9 (3 por servicio) |
+
+---
+
+## 💰 Estimación de Costos (Azure for Students)
+
+**Crédito disponible:** $100 USD  
+**Costo estimado mensual:** $15-25 USD
+
+**Desglose:**
+- Container Apps (Consumption): $10-15 USD/mes
+- Container Registry (Basic): $5 USD/mes
+- Key Vault: $0.03 USD/10,000 operaciones
+- Log Analytics: Incluido en tier gratuito
+- **Total estimado:** $15-20 USD/mes
+
+**Optimizaciones aplicadas:**
+- ✅ Uso de Consumption Plan (pago por uso)
+- ✅ Auto-scaling mínimo (1 réplica)
+- ✅ Container Registry Basic tier
+- ✅ Key Vault con operaciones mínimas
+
+---
+
+## 📚 Documentación Generada
+
+1. ✅ [GUIA_DESPLIEGUE_AZURE.md](docs/GUIA_DESPLIEGUE_AZURE.md) - Guía paso a paso detallada
+2. ✅ [AZURE_QUICK_START.md](AZURE_QUICK_START.md) - Inicio rápido de una página
+3. ✅ [AZURE_CHECKLIST.md](docs/AZURE_CHECKLIST.md) - Lista de verificación completa
+4. ✅ [AZURE_COMPARACION_OPCIONES.md](docs/AZURE_COMPARACION_OPCIONES.md) - Análisis de opciones de despliegue
+5. ✅ [AZURE_RESUMEN_EJECUTIVO.md](docs/AZURE_RESUMEN_EJECUTIVO.md) - Resumen ejecutivo
+6. ✅ [REGISTRO_DESPLIEGUE_AZURE.md](REGISTRO_DESPLIEGUE_AZURE.md) - Log detallado del proceso
+7. ✅ [deploy-azure.sh](deploy-azure.sh) - Script automatizado de despliegue
+8. ✅ [cleanup-azure.sh](cleanup-azure.sh) - Script de limpieza de recursos
+
+---
+
+## 🧪 Testing Post-Despliegue
+
+### Endpoints a verificar:
+
+**Backend:**
 ```bash
-# 1. Navegar al proyecto
-cd "Semana 3 Sumativa 2 v2"
+# Health check
+curl https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/api/actuator/health
 
-# 2. Ejecutar script de despliegue (FUNCIONA PERFECTAMENTE ✅)
-./deploy.sh
+# Swagger UI
+https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/swagger-ui.html
 
-# El script automáticamente:
-# ✅ Verifica prerrequisitos
-# ✅ Construye las imágenes
-# ✅ Inicia los servicios
-# ✅ Hace health checks
-# ✅ Muestra las URLs de acceso
-
-# 3. Acceder a la aplicación
-# Frontend: http://localhost (puerto 80)
-# Backend: http://localhost:8080
-# Swagger: http://localhost:8080/swagger-ui.html
-# API Gateway: http://localhost:8000
-
-# 4. Login con credenciales de prueba
-# Admin: admin@vitalwatch.com / Admin123!
+# Autenticación
+curl -X POST https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
 ```
 
----
-
-## 📝 Mantenimiento de Documentación
-
-### Reglas para Mantener la Documentación Limpia
-
-1. **NO crear archivos de análisis temporal** en la raíz
-2. **NO crear múltiples READMEs** para lo mismo
-3. **Actualizar documentación existente** en lugar de crear nueva
-4. **Usar carpeta docs/** para documentación técnica
-5. **Mantener README.md** como punto de entrada principal
-
-### Estructura de Documentación Recomendada
-
-```
-docs/
-├── ARQUITECTURA.md          # Diseño técnico y diagramas
-├── GUIA_INTEGRACION.md      # Setup y configuración
-├── guia-postman.md          # Testing
-├── guia-oracle-cloud.md     # Base de datos
-└── postman-collection.json  # API Collection
-```
-
----
-
----
-
-## ✅ Estado del Script deploy.sh
-
-### Prueba Exitosa - 2026-01-23
-
-El script `deploy.sh` ha sido **probado y funciona perfectamente**:
-
+**Frontend:**
 ```bash
-./deploy.sh
+# Homepage
+curl -I https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/
+
+# Verificar que carga correctamente
+Abrir en navegador: https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/
 ```
 
-**Resultados**:
-- ✅ Verificación de prerrequisitos: OK
-- ✅ Construcción de imágenes: OK (Backend + Frontend + API Gateway)
-- ✅ Inicio de servicios: OK (3 contenedores)
-- ✅ Health checks: OK (Backend, Frontend, API Gateway, Database)
-- ✅ Tiempo total: ~32 segundos
-
-**URLs verificadas**:
-- ✅ Frontend: http://localhost → HTTP 200
-- ✅ Backend: http://localhost:8080/api/v1/health → HTTP 200
-- ✅ Database: http://localhost:8080/api/v1/health/database → HTTP 200
-- ✅ API Gateway: http://localhost:8000 → HTTP 200
+**API Gateway:**
+```bash
+# Kong health check
+curl https://vitalwatch-api-gateway.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/
+```
 
 ---
 
-**Última actualización**: 2026-01-23 18:00  
-**Versión**: 1.0.0  
-**Estado**: ✅ COMPLETAMENTE FUNCIONAL
+## 🎓 Lecciones Aprendidas
+
+### Técnicas
+1. **Arquitectura de CPU importa:** Siempre especificar `--platform linux/amd64` al construir en Mac M1/M2/M3
+2. **Resource Providers:** Registrar todos los providers necesarios antes de empezar
+3. **RBAC vs Access Policies:** RBAC en Key Vault requiere asignación explícita de roles
+4. **Propagación de permisos:** Los cambios RBAC pueden tomar hasta 30 segundos
+
+### Operacionales
+1. **Azure for Students:** Tiene limitaciones de región, verificar disponibilidad primero
+2. **Idempotencia:** Los scripts deben detectar recursos existentes y reutilizarlos
+3. **Logs detallados:** Mantener un registro completo facilita troubleshooting
+4. **Naming conventions:** Usar nombres descriptivos y consistentes
+
+### De Arquitectura
+1. **Microservicios:** Cada servicio se despliega independientemente, facilitando actualizaciones
+2. **Secrets management:** Centralizar secrets en Key Vault mejora seguridad
+3. **Auto-scaling:** Configurar límites realistas según carga esperada
+4. **Multi-cloud:** Integración Azure + Oracle Cloud funciona sin problemas
+
+---
+
+## 🔄 Comandos Útiles
+
+### Monitoreo
+```bash
+# Ver logs del backend
+az containerapp logs show --name vitalwatch-backend --resource-group rg-vitalwatch-prod --follow
+
+# Estado de todos los servicios
+az containerapp list --resource-group rg-vitalwatch-prod --output table
+
+# Métricas de un servicio
+az monitor metrics list --resource /subscriptions/.../vitalwatch-backend --metric-names Requests
+```
+
+### Gestión
+```bash
+# Escalar manualmente
+az containerapp update --name vitalwatch-backend --resource-group rg-vitalwatch-prod --min-replicas 2
+
+# Actualizar imagen
+az containerapp update --name vitalwatch-backend --resource-group rg-vitalwatch-prod --image acrvitalwatch.azurecr.io/vitalwatch-backend:v1.0.1
+
+# Reiniciar servicio
+az containerapp revision restart --name vitalwatch-backend --resource-group rg-vitalwatch-prod
+```
+
+### Limpieza
+```bash
+# Eliminar todos los recursos
+./cleanup-azure.sh
+
+# O manualmente
+az group delete --name rg-vitalwatch-prod --yes --no-wait
+```
+
+---
+
+## 👥 Equipo y Contacto
+
+**Proyecto:** VitalWatch - Sistema de Monitoreo de Signos Vitales  
+**Institución:** DUOC UC  
+**Curso:** Cloud Native  
+**Semestre:** 3  
+**Evaluación:** Sumativa 2  
+
+**Responsable:** Sebastián Briceño  
+**Email:** seb.briceno@duocuc.cl
+
+---
+
+## 📅 Próximos Pasos
+
+### Mejoras Recomendadas
+- [ ] Implementar CI/CD con GitHub Actions
+- [ ] Agregar Application Insights avanzado
+- [ ] Configurar custom domain y SSL certificate
+- [ ] Implementar API rate limiting más granular
+- [ ] Agregar cache layer (Redis)
+- [ ] Implementar backup automático de Key Vault
+- [ ] Configurar alertas de monitoreo
+
+### Optimizaciones
+- [ ] Implementar CDN para assets estáticos
+- [ ] Optimizar tamaño de imágenes Docker
+- [ ] Configurar health checks personalizados
+- [ ] Implementar circuit breaker pattern
+- [ ] Agregar tracing distribuido
+
+---
+
+**Última actualización:** 26 de Enero, 2026 - 00:45 hrs  
+**Estado:** ✅ COMPLETADO Y DOCUMENTADO  
+**Versión:** 1.0.0

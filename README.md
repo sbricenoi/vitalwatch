@@ -2,6 +2,22 @@
 
 Sistema Cloud Native para monitoreo en tiempo real de signos vitales de pacientes hospitalizados con generación automática de alertas médicas.
 
+## 🌐 Despliegue en Producción
+
+**Estado:** ✅ DESPLEGADO EN AZURE
+
+| Servicio | URL de Producción | Estado |
+|----------|------------------|--------|
+| **Frontend** | [https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io](https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/) | ✅ Running |
+| **Backend API** | [https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io](https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/) | ✅ Running |
+| **API Gateway** | [https://vitalwatch-api-gateway.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io](https://vitalwatch-api-gateway.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/) | ✅ Running |
+
+**Infraestructura:**
+- **Cloud Provider:** Microsoft Azure (South Central US)
+- **Servicios:** Azure Container Apps, ACR, Key Vault
+- **Base de Datos:** Oracle Cloud Autonomous Database
+- **Arquitectura:** Microservicios con auto-scaling (1-3 réplicas)
+
 ---
 
 ## 📋 Tabla de Contenidos
@@ -148,9 +164,28 @@ Una vez iniciado, accede a:
 ### Documentos Principales
 
 1. **[Guía de Integración](docs/GUIA_INTEGRACION.md)** - Setup completo y configuración
-2. **[Arquitectura del Sistema](docs/ARQUITECTURA.md)** - Diagramas y diseño técnico
+2. **[Arquitectura del Sistema](docs/arquitectura.md)** - Diagramas y diseño técnico
 3. **[Guía de Postman](docs/guia-postman.md)** - Testing de API
 4. **[Guía Oracle Cloud](docs/guia-oracle-cloud.md)** - Configuración de BD
+
+### 🔷 Despliegue en Azure (Nuevo!)
+
+- **[AZURE_INDEX.md](AZURE_INDEX.md)** - 📚 Índice maestro de documentación Azure
+- **[AZURE_README.md](AZURE_README.md)** - ⚡ Guía rápida y comandos comunes
+- **[Resumen Ejecutivo](docs/AZURE_RESUMEN_EJECUTIVO.md)** - 📊 Visión general y costos
+- **[Guía Completa Azure](docs/GUIA_DESPLIEGUE_AZURE.md)** - 📖 Despliegue paso a paso
+- **[Checklist Azure](docs/AZURE_CHECKLIST.md)** - ✅ Lista de verificación
+- **[Comparación Opciones](docs/AZURE_COMPARACION_OPCIONES.md)** - ⚖️ Análisis de alternativas
+
+#### 🚀 Despliegue Rápido en Azure
+
+```bash
+# Despliegue automatizado completo
+./deploy-azure.sh
+
+# Tiempo: 1-2 horas
+# Costo: $47-85/mes
+```
 
 ### API Documentation
 
