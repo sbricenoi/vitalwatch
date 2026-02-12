@@ -2,36 +2,285 @@
 	"info": {
 		"_postman_id": "vitalwatch-api-collection-2026",
 		"name": "VitalWatch - Sistema de Alertas Médicas API",
-		"description": "Colección completa de endpoints para el sistema VitalWatch.\n\nBase de Datos: Oracle Cloud Autonomous Database (s58onuxcx4c1qxe9)\nRegión: Santiago, Chile (sa-santiago-1)\n\n## Configuración Inicial\n\n1. Importar esta colección en Postman\n2. Configurar las variables de entorno\n3. Obtener token JWT desde IdaaS\n4. Probar endpoints\n\n## Variables de Entorno Requeridas\n\n- `base_url`: http://localhost:8080 (desarrollo) o URL del API Gateway en producción\n- `api_version`: v1\n- `jwt_token`: Token JWT obtenido desde Auth0/Keycloak\n\n## Autenticación\n\nTodos los endpoints (excepto health) requieren:\n```\nAuthorization: Bearer {{jwt_token}}\n```",
+		"description": "Colección completa de endpoints para el sistema VitalWatch desplegado en Azure.\n\n**Backend URL:** https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io\n**Base de Datos:** Oracle Cloud Autonomous Database (s58onuxcx4c1qxe9)\n**Región:** Santiago, Chile (sa-santiago-1)\n\n## Configuración Inicial\n\n1. Importar esta colección en Postman\n2. Configurar las variables de entorno (base_url, api_version)\n3. Ejecutar el endpoint de Login para obtener el token\n4. El token se guardará automáticamente y se usará en las siguientes peticiones\n\n## Autenticación\n\nTodos los endpoints (excepto auth/login, auth/credentials y health) requieren:\n```\nAuthorization: Bearer {{token}}\n```\n\n## Usuarios de Prueba\n\n- **Admin:** admin@vitalwatch.com / Admin123!\n- **Médico:** medico@vitalwatch.com / Medico123!\n- **Enfermera:** enfermera@vitalwatch.com / Enfermera123!",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Health Check",
+			"name": "1. Autenticación",
 			"item": [
 				{
-					"name": "Health Check",
+					"name": "Login - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.token).to.exist;",
+									"    ",
+									"    // Guardar el token automáticamente",
+									"    pm.environment.set(\"token\", jsonData.data.token);",
+									"    pm.environment.set(\"user_id\", jsonData.data.id);",
+									"    pm.environment.set(\"user_nombre\", jsonData.data.nombre);",
+									"    pm.environment.set(\"user_rol\", jsonData.data.rol);",
+									"});",
+									"",
+									"pm.test(\"Response has user data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.nombre).to.exist;",
+									"    pm.expect(jsonData.data.email).to.exist;",
+									"    pm.expect(jsonData.data.rol).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "GET",
-						"header": [],
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@vitalwatch.com\",\n  \"password\": \"Admin123!\"\n}"
+						},
 						"url": {
-							"raw": "{{base_url}}/actuator/health",
+							"raw": "{{base_url}}/api/{{api_version}}/auth/login",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"actuator",
-								"health"
+								"api",
+								"{{api_version}}",
+								"auth",
+								"login"
 							]
 						},
-						"description": "Verifica el estado de salud de la aplicación."
+						"description": "Autentica un usuario administrador y devuelve un token de acceso.\n\n**Credenciales Admin:**\n- Email: admin@vitalwatch.com\n- Password: Admin123!\n\nEl token se guarda automáticamente en las variables de entorno."
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Médico",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.environment.set(\"token\", jsonData.data.token);",
+									"    pm.environment.set(\"user_id\", jsonData.data.id);",
+									"    pm.environment.set(\"user_nombre\", jsonData.data.nombre);",
+									"    pm.environment.set(\"user_rol\", jsonData.data.rol);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"medico@vitalwatch.com\",\n  \"password\": \"Medico123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Autentica un usuario médico.\n\n**Credenciales Médico:**\n- Email: medico@vitalwatch.com\n- Password: Medico123!"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Enfermera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.environment.set(\"token\", jsonData.data.token);",
+									"    pm.environment.set(\"user_id\", jsonData.data.id);",
+									"    pm.environment.set(\"user_nombre\", jsonData.data.nombre);",
+									"    pm.environment.set(\"user_rol\", jsonData.data.rol);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"enfermera@vitalwatch.com\",\n  \"password\": \"Enfermera123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Autentica un usuario enfermera.\n\n**Credenciales Enfermera:**\n- Email: enfermera@vitalwatch.com\n- Password: Enfermera123!"
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Autenticación",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/auth/check",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"auth",
+								"check"
+							]
+						},
+						"description": "Verifica si el usuario está autenticado y el token es válido."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Credenciales de Prueba",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/auth/credentials",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"auth",
+								"credentials"
+							]
+						},
+						"description": "Devuelve las credenciales de usuarios de prueba disponibles.\n\nEndpoint público, no requiere autenticación."
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Endpoints para autenticación de usuarios.\n\nDespués de hacer login exitoso, el token se guarda automáticamente y se usa en las siguientes peticiones."
 		},
 		{
-			"name": "Pacientes",
+			"name": "2. Health Checks",
+			"item": [
+				{
+					"name": "Health Check General",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"health"
+							]
+						},
+						"description": "Verifica el estado de salud de la aplicación.\n\nEndpoint público, no requiere autenticación."
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check Base de Datos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/health/database",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"health",
+								"database"
+							]
+						},
+						"description": "Verifica la conexión con la base de datos Oracle Cloud.\n\n**Requiere autenticación.**"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para verificar el estado del sistema."
+		},
+		{
+			"name": "3. Pacientes",
 			"item": [
 				{
 					"name": "Listar Todos los Pacientes",
@@ -40,7 +289,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -66,7 +315,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -93,7 +342,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -104,7 +353,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rut\": \"12345678-9\",\n  \"fechaNacimiento\": \"1958-05-15\",\n  \"edad\": 65,\n  \"genero\": \"M\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-01\",\n  \"estado\": \"CRÍTICO\",\n  \"diagnostico\": \"Insuficiencia cardíaca congestiva\"\n}"
+							"raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rut\": \"12345678-9\",\n  \"fechaNacimiento\": \"1958-05-15\",\n  \"edad\": 68,\n  \"genero\": \"M\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-01\",\n  \"estado\": \"CRÍTICO\",\n  \"diagnostico\": \"Insuficiencia cardíaca congestiva\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/{{api_version}}/pacientes",
@@ -117,7 +366,7 @@
 								"pacientes"
 							]
 						},
-						"description": "Registra un nuevo paciente en el sistema.\n\n**Validaciones:**\n- nombre: requerido, mínimo 2 caracteres\n- apellido: requerido, mínimo 2 caracteres\n- rut: requerido, formato válido\n- edad: requerido, entre 0 y 120\n- genero: M, F, O\n- estado: ESTABLE, MODERADO, CRÍTICO, RECUPERACIÓN"
+						"description": "Registra un nuevo paciente en el sistema.\n\n**Campos Requeridos:**\n- nombre: String (2-100 chars)\n- apellido: String (2-100 chars)\n- rut: String (formato: ########-#)\n- fechaNacimiento: Date (formato: YYYY-MM-DD)\n- edad: Integer (0-120)\n- genero: String (M, F, O)\n- sala: String (max 20 chars)\n- cama: String (max 10 chars)\n- estado: String (ESTABLE, MODERADO, CRÍTICO, RECUPERACIÓN)\n\n**Opcional:**\n- diagnostico: String (max 500 chars)"
 					},
 					"response": []
 				},
@@ -128,7 +377,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -139,7 +388,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rut\": \"12345678-9\",\n  \"fechaNacimiento\": \"1958-05-15\",\n  \"edad\": 65,\n  \"genero\": \"M\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-02\",\n  \"estado\": \"MODERADO\",\n  \"diagnostico\": \"Insuficiencia cardíaca - mejorando\"\n}"
+							"raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"rut\": \"12345678-9\",\n  \"fechaNacimiento\": \"1958-05-15\",\n  \"edad\": 68,\n  \"genero\": \"M\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-02\",\n  \"estado\": \"MODERADO\",\n  \"diagnostico\": \"Insuficiencia cardíaca - mejorando\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/{{api_version}}/pacientes/1",
@@ -153,7 +402,7 @@
 								"1"
 							]
 						},
-						"description": "Actualiza la información de un paciente existente."
+						"description": "Actualiza la información de un paciente existente.\n\n**NOTA:** Actualmente hay un problema con el trigger de Oracle Database que impide la actualización. Se está trabajando en la solución."
 					},
 					"response": []
 				},
@@ -164,7 +413,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -183,68 +432,39 @@
 						"description": "Elimina (soft delete) un paciente del sistema. El paciente no se elimina físicamente, solo se marca como inactivo."
 					},
 					"response": []
-				},
-				{
-					"name": "Buscar Pacientes por Estado",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/pacientes/estado/CRÍTICO",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"{{api_version}}",
-								"pacientes",
-								"estado",
-								"CRÍTICO"
-							]
-						},
-						"description": "Filtra pacientes por su estado.\n\nEstados válidos: ESTABLE, MODERADO, CRÍTICO, RECUPERACIÓN"
-					},
-					"response": []
-				},
-				{
-					"name": "Buscar Pacientes por Sala",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/pacientes/sala/UCI",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"{{api_version}}",
-								"pacientes",
-								"sala",
-								"UCI"
-							]
-						},
-						"description": "Filtra pacientes por sala hospitalaria."
-					},
-					"response": []
 				}
-			]
+			],
+			"description": "Endpoints para gestión de pacientes."
 		},
 		{
-			"name": "Signos Vitales",
+			"name": "4. Signos Vitales",
 			"item": [
+				{
+					"name": "Listar Todos los Signos Vitales",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"{{api_version}}",
+								"signos-vitales"
+							]
+						},
+						"description": "Obtiene todos los registros de signos vitales del sistema."
+					},
+					"response": []
+				},
 				{
 					"name": "Obtener Signos Vitales por Paciente",
 					"request": {
@@ -252,7 +472,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -274,42 +494,13 @@
 					"response": []
 				},
 				{
-					"name": "Obtener Último Registro de Signos Vitales",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales/paciente/1/ultimo",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"{{api_version}}",
-								"signos-vitales",
-								"paciente",
-								"1",
-								"ultimo"
-							]
-						},
-						"description": "Obtiene el registro más reciente de signos vitales de un paciente."
-					},
-					"response": []
-				},
-				{
 					"name": "Obtener Signo Vital por ID",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -330,13 +521,13 @@
 					"response": []
 				},
 				{
-					"name": "Registrar Signos Vitales",
+					"name": "Registrar Signos Vitales - Normales",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -347,7 +538,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"pacienteId\": 1,\n  \"frecuenciaCardiaca\": 85,\n  \"presionSistolica\": 120,\n  \"presionDiastolica\": 80,\n  \"temperatura\": 36.8,\n  \"saturacionOxigeno\": 98,\n  \"frecuenciaRespiratoria\": 16,\n  \"estadoConciencia\": \"ALERTA\",\n  \"observaciones\": \"Paciente estable, sin novedades\",\n  \"registradoPor\": \"Enfermera García\"\n}"
+							"raw": "{\n  \"pacienteId\": 1,\n  \"frecuenciaCardiaca\": 75,\n  \"presionSistolica\": 120,\n  \"presionDiastolica\": 80,\n  \"temperatura\": 36.5,\n  \"saturacionOxigeno\": 98,\n  \"frecuenciaRespiratoria\": 16,\n  \"estadoConciencia\": \"ALERTA\",\n  \"observaciones\": \"Paciente estable, sin novedades\",\n  \"registradoPor\": \"Enfermera García\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/{{api_version}}/signos-vitales",
@@ -360,18 +551,18 @@
 								"signos-vitales"
 							]
 						},
-						"description": "Registra nuevos signos vitales para un paciente.\n\n**Validaciones:**\n- frecuenciaCardiaca: 0-300 bpm\n- presionSistolica: 0-300 mmHg\n- presionDiastolica: 0-200 mmHg\n- temperatura: 30.0-45.0 °C\n- saturacionOxigeno: 0-100 %\n- frecuenciaRespiratoria: 0-100 rpm\n- estadoConciencia: ALERTA, VERBAL, DOLOR, INCONSCIENTE\n\n**Nota:** Si los valores están fuera de rangos normales, se generará automáticamente una alerta."
+						"description": "Registra signos vitales con valores normales.\n\n**Campos Requeridos:**\n- pacienteId: Long\n- frecuenciaCardiaca: Integer (0-300)\n- presionSistolica: Integer (0-300)\n- presionDiastolica: Integer (0-200)\n- temperatura: BigDecimal (30.0-45.0)\n- saturacionOxigeno: Integer (0-100)\n- frecuenciaRespiratoria: Integer (0-100)\n- estadoConciencia: String (ALERTA, VERBAL, DOLOR, INCONSCIENTE)\n- registradoPor: String (max 100 chars)\n\n**Opcional:**\n- observaciones: String (max 500 chars)"
 					},
 					"response": []
 				},
 				{
-					"name": "Registrar Signos Vitales - Valores Anormales",
+					"name": "Registrar Signos Vitales - Anormales",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -395,7 +586,7 @@
 								"signos-vitales"
 							]
 						},
-						"description": "Ejemplo de registro con valores anormales que generará alertas críticas automáticamente:\n- FC: 125 (>120) → CRÍTICA\n- Presión: 165/95 (>160/90) → CRÍTICA\n- Temperatura: 38.9 (>38.5) → CRÍTICA\n- SpO2: 88 (<90) → CRÍTICA\n- FR: 28 (>25) → CRÍTICA"
+						"description": "Ejemplo de registro con valores anormales que generará alertas críticas automáticamente:\n- FC: 125 (>120) → CRÍTICA\n- Presión: 165/95 (>160/90) → CRÍTICA  \n- Temperatura: 38.9 (>38.5) → CRÍTICA\n- SpO2: 88 (<90) → CRÍTICA\n- FR: 28 (>25) → CRÍTICA"
 					},
 					"response": []
 				},
@@ -406,7 +597,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -442,7 +633,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -462,10 +653,11 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Endpoints para gestión de signos vitales."
 		},
 		{
-			"name": "Alertas",
+			"name": "5. Alertas",
 			"item": [
 				{
 					"name": "Listar Todas las Alertas",
@@ -474,7 +666,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -494,18 +686,18 @@
 					"response": []
 				},
 				{
-					"name": "Listar Alertas Activas",
+					"name": "Obtener Alerta por ID",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/alertas/activas",
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -513,37 +705,10 @@
 								"api",
 								"{{api_version}}",
 								"alertas",
-								"activas"
+								"1"
 							]
 						},
-						"description": "Obtiene solo las alertas con estado ACTIVA que requieren atención."
-					},
-					"response": []
-				},
-				{
-					"name": "Listar Alertas Críticas",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/alertas/criticas",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"{{api_version}}",
-								"alertas",
-								"criticas"
-							]
-						},
-						"description": "Obtiene solo las alertas con severidad CRÍTICA."
+						"description": "Obtiene el detalle completo de una alerta específica."
 					},
 					"response": []
 				},
@@ -554,7 +719,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -576,40 +741,13 @@
 					"response": []
 				},
 				{
-					"name": "Obtener Alerta por ID",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/alertas/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"{{api_version}}",
-								"alertas",
-								"1"
-							]
-						},
-						"description": "Obtiene el detalle completo de una alerta específica."
-					},
-					"response": []
-				},
-				{
-					"name": "Crear Alerta Manual",
+					"name": "Crear Alerta",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -633,18 +771,18 @@
 								"alertas"
 							]
 						},
-						"description": "Crea una alerta manual (no generada automáticamente por el sistema).\n\nSeveridades: BAJA, MODERADA, CRÍTICA"
+						"description": "Crea una alerta manual (no generada automáticamente).\n\nSeveridades: BAJA, MODERADA, CRÍTICA"
 					},
 					"response": []
 				},
 				{
-					"name": "Resolver Alerta",
+					"name": "Actualizar Alerta",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -655,10 +793,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"resueltoPor\": \"Dr. Ramírez\",\n  \"notasResolucion\": \"Se administró medicación antihipertensiva. Presión arterial normalizada. Paciente estable.\"\n}"
+							"raw": "{\n  \"estado\": \"RESUELTA\",\n  \"observaciones\": \"Paciente atendido y estabilizado\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/alertas/1/resolver",
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -666,22 +804,21 @@
 								"api",
 								"{{api_version}}",
 								"alertas",
-								"1",
-								"resolver"
+								"1"
 							]
 						},
-						"description": "Marca una alerta como RESUELTA y registra quién la resolvió y las notas de resolución."
+						"description": "Actualiza el estado o información de una alerta."
 					},
 					"response": []
 				},
 				{
-					"name": "Descartar Alerta",
+					"name": "Cambiar Estado de Alerta",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							},
 							{
@@ -692,10 +829,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"resueltoPor\": \"Enfermera Silva\",\n  \"notasResolucion\": \"Falsa alarma. Error en el registro de signos vitales.\"\n}"
+							"raw": "{\n  \"estado\": \"EN_REVISION\",\n  \"observaciones\": \"Médico evaluando paciente\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/alertas/1/descartar",
+							"raw": "{{base_url}}/api/{{api_version}}/alertas/1/estado",
 							"host": [
 								"{{base_url}}"
 							],
@@ -704,10 +841,10 @@
 								"{{api_version}}",
 								"alertas",
 								"1",
-								"descartar"
+								"estado"
 							]
 						},
-						"description": "Marca una alerta como DESCARTADA (falsa alarma o error)."
+						"description": "Cambia el estado de una alerta.\n\nEstados: PENDIENTE, EN_REVISION, RESUELTA"
 					},
 					"response": []
 				},
@@ -718,7 +855,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -734,23 +871,24 @@
 								"1"
 							]
 						},
-						"description": "Elimina una alerta del sistema (solo para administradores)."
+						"description": "Elimina una alerta del sistema (solo administradores)."
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Endpoints para gestión de alertas médicas."
 		},
 		{
-			"name": "Dashboard & Estadísticas",
+			"name": "6. Dashboard",
 			"item": [
 				{
-					"name": "Obtener Estadísticas del Dashboard",
+					"name": "Obtener Estadísticas",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -766,71 +904,279 @@
 								"estadisticas"
 							]
 						},
-						"description": "Obtiene estadísticas generales para el dashboard:\n- Total de pacientes\n- Pacientes críticos\n- Alertas activas\n- Alertas críticas"
-					},
-					"response": []
-				},
-				{
-					"name": "Obtener Resumen de Pacientes por Estado",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/dashboard/pacientes-por-estado",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"{{api_version}}",
-								"dashboard",
-								"pacientes-por-estado"
-							]
-						},
-						"description": "Obtiene el conteo de pacientes agrupados por estado (ESTABLE, MODERADO, CRÍTICO, RECUPERACIÓN)."
-					},
-					"response": []
-				},
-				{
-					"name": "Obtener Alertas Recientes",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/{{api_version}}/dashboard/alertas-recientes?limit=10",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"{{api_version}}",
-								"dashboard",
-								"alertas-recientes"
-							],
-							"query": [
-								{
-									"key": "limit",
-									"value": "10"
-								}
-							]
-						},
-						"description": "Obtiene las alertas más recientes (por defecto últimas 10)."
+						"description": "Obtiene estadísticas generales del sistema:\n- Total de pacientes\n- Pacientes críticos\n- Alertas activas\n- Alertas críticas"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Endpoints para dashboard y estadísticas."
+		},
+		{
+			"name": "7. RabbitMQ - Microservicios",
+			"item": [
+				{
+					"name": "Productor 1: Detector de Anomalías",
+					"item": [
+						{
+							"name": "Verificar Signos Vitales - Normales",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pacienteId\": 1,\n  \"pacienteNombre\": \"Juan Pérez\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-01\",\n  \"frecuenciaCardiaca\": 75,\n  \"presionSistolica\": 120,\n  \"presionDiastolica\": 80,\n  \"temperatura\": 36.5,\n  \"saturacionOxigeno\": 98,\n  \"frecuenciaRespiratoria\": 16,\n  \"deviceId\": \"DEVICE-001\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/vital-signs/check",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"vital-signs",
+										"check"
+									]
+								},
+								"description": "Envía signos vitales normales al detector de anomalías. No generará alertas."
+							},
+							"response": []
+						},
+						{
+							"name": "Verificar Signos Vitales - CRÍTICOS",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"pacienteId\": 1,\n  \"pacienteNombre\": \"Juan Pérez\",\n  \"sala\": \"UCI\",\n  \"cama\": \"A-01\",\n  \"frecuenciaCardiaca\": 125,\n  \"presionSistolica\": 165,\n  \"presionDiastolica\": 95,\n  \"temperatura\": 38.9,\n  \"saturacionOxigeno\": 88,\n  \"frecuenciaRespiratoria\": 28,\n  \"deviceId\": \"DEVICE-001\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/vital-signs/check",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"vital-signs",
+										"check"
+									]
+								},
+								"description": "Envía signos vitales críticos que generarán múltiples alertas:\n- FC: 125 (crítico: >120)\n- PS: 165 (crítico: >160)\n- PD: 95 (crítico: >90)\n- Temp: 38.9 (crítico: >38.5)\n- SpO2: 88 (crítico: <90)\n- FR: 28 (crítico: >25)\n\nPublicará alerta a RabbitMQ."
+							},
+							"response": []
+						},
+						{
+							"name": "Health Check - Productor 1",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/v1/vital-signs/health",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"vital-signs",
+										"health"
+									]
+								},
+								"description": "Verifica el estado del Productor 1 (Detector de Anomalías)"
+							},
+							"response": []
+						}
+					],
+					"description": "Endpoints del Productor 1: Detector de Anomalías en Signos Vitales.\n\n**Puerto:** 8081\n**Cola:** vital-signs-alerts"
+				},
+				{
+					"name": "Productor 2: Generador de Resúmenes",
+					"item": [
+						{
+							"name": "Generar Resumen Manual",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/api/v1/summary/generate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"api",
+										"v1",
+										"summary",
+										"generate"
+									]
+								},
+								"description": "Genera un resumen manualmente (sin esperar los 5 minutos).\n\nPublica a la cola: vital-signs-summary"
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener Estadísticas",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/api/v1/summary/stats",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"api",
+										"v1",
+										"summary",
+										"stats"
+									]
+								},
+								"description": "Obtiene estadísticas del generador de resúmenes:\n- Total de resúmenes generados\n- Última verificación"
+							},
+							"response": []
+						},
+						{
+							"name": "Health Check - Productor 2",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/api/v1/summary/health",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"api",
+										"v1",
+										"summary",
+										"health"
+									]
+								},
+								"description": "Verifica el estado del Productor 2 (Generador de Resúmenes)"
+							},
+							"response": []
+						}
+					],
+					"description": "Endpoints del Productor 2: Generador de Resúmenes Periódicos.\n\n**Puerto:** 8082\n**Cola:** vital-signs-summary\n**Frecuencia:** Cada 5 minutos (automático)"
+				},
+				{
+					"name": "RabbitMQ Management",
+					"item": [
+						{
+							"name": "Ver Colas",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Basic dml0YWx3YXRjaDpob3NwaXRhbDEyMw==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:15672/api/queues",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "15672",
+									"path": [
+										"api",
+										"queues"
+									]
+								},
+								"description": "Lista todas las colas en RabbitMQ.\n\n**Credenciales:**\n- Usuario: vitalwatch\n- Password: hospital123\n\n**Authorization:** Basic dml0YWx3YXRjaDpob3NwaXRhbDEyMw=="
+							},
+							"response": []
+						},
+						{
+							"name": "Ver Cola: vital-signs-alerts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Basic dml0YWx3YXRjaDpob3NwaXRhbDEyMw==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:15672/api/queues/%2F/vital-signs-alerts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "15672",
+									"path": [
+										"api",
+										"queues",
+										"%2F",
+										"vital-signs-alerts"
+									]
+								},
+								"description": "Obtiene detalles de la cola vital-signs-alerts:\n- Mensajes en cola\n- Mensajes consumidos\n- Tasa de publicación"
+							},
+							"response": []
+						},
+						{
+							"name": "Ver Cola: vital-signs-summary",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Basic dml0YWx3YXRjaDpob3NwaXRhbDEyMw==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:15672/api/queues/%2F/vital-signs-summary",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "15672",
+									"path": [
+										"api",
+										"queues",
+										"%2F",
+										"vital-signs-summary"
+									]
+								},
+								"description": "Obtiene detalles de la cola vital-signs-summary"
+							},
+							"response": []
+						}
+					],
+					"description": "Endpoints del Management API de RabbitMQ.\n\n**URL Web:** http://localhost:15672\n**Usuario:** vitalwatch\n**Password:** hospital123"
+				}
+			],
+			"description": "Endpoints de los microservicios RabbitMQ (Productores y Consumidores).\n\n## Arquitectura\n\n**Productores:**\n1. Detector de Anomalías (Puerto 8081) → publica a `vital-signs-alerts`\n2. Generador de Resúmenes (Puerto 8082) → publica a `vital-signs-summary`\n\n**Consumidores:**\n1. DB Saver → consume de `vital-signs-alerts` → guarda en Oracle\n2. JSON Generator → consume de `vital-signs-alerts` → genera archivos JSON\n\n**RabbitMQ:**\n- Puerto AMQP: 5672\n- Puerto Management: 15672\n- Usuario: vitalwatch\n- Password: hospital123"
 		}
 	],
 	"event": [
@@ -840,8 +1186,11 @@
 				"type": "text/javascript",
 				"exec": [
 					"// Script pre-request global",
-					"// Puedes agregar lógica para renovar tokens JWT automáticamente aquí",
-					""
+					"// Verifica si hay token disponible",
+					"const token = pm.environment.get(\"token\");",
+					"if (!token && pm.request.url.path.indexOf('login') === -1) {",
+					"    console.log(\"⚠️ No hay token. Por favor ejecuta el endpoint de Login primero.\");",
+					"}"
 				]
 			}
 		},
@@ -850,30 +1199,25 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"// Tests globales",
-					"pm.test(\"Status code is 200 or 201\", function () {",
-					"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-					"});",
+					"// Tests globales para todas las peticiones",
 					"",
-					"pm.test(\"Response has traceId\", function () {",
+					"// Verificar que la respuesta tenga estructura correcta",
+					"pm.test(\"Response has correct structure\", function () {",
 					"    var jsonData = pm.response.json();",
 					"    pm.expect(jsonData).to.have.property('traceId');",
-					"});",
-					"",
-					"pm.test(\"Response has code\", function () {",
-					"    var jsonData = pm.response.json();",
 					"    pm.expect(jsonData).to.have.property('code');",
-					"});",
-					"",
-					"pm.test(\"Response has message\", function () {",
-					"    var jsonData = pm.response.json();",
 					"    pm.expect(jsonData).to.have.property('message');",
 					"});",
 					"",
-					"pm.test(\"Response has data\", function () {",
-					"    var jsonData = pm.response.json();",
-					"    pm.expect(jsonData).to.have.property('data');",
-					"});"
+					"// Verificar tiempo de respuesta",
+					"pm.test(\"Response time is less than 2000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});",
+					"",
+					"// Log de información útil",
+					"console.log(\"📊 Status:\", pm.response.code);",
+					"console.log(\"⏱️ Time:\", pm.response.responseTime + \"ms\");",
+					"console.log(\"📝 Message:\", pm.response.json().message);"
 				]
 			}
 		}
@@ -881,7 +1225,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8080",
+			"value": "https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io",
 			"type": "string"
 		},
 		{
@@ -890,8 +1234,23 @@
 			"type": "string"
 		},
 		{
-			"key": "jwt_token",
-			"value": "YOUR_JWT_TOKEN_HERE",
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_nombre",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_rol",
+			"value": "",
 			"type": "string"
 		}
 	]

@@ -1,0 +1,158 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # RabbitMQ - Message Broker
+  # ============================================================================
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: vitalwatch-rabbitmq
+    hostname: vitalwatch-rabbitmq
+    ports:
+      - "5672:5672"   # Puerto AMQP para conexiones de aplicaciones
+      - "15672:15672" # Puerto Management UI (Web Interface)
+    environment:
+      RABBITMQ_DEFAULT_USER: vitalwatch
+      RABBITMQ_DEFAULT_PASS: hospital123
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_log:/var/log/rabbitmq
+    networks:
+      - vitalwatch-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+
+  # ============================================================================
+  # Productor 1: Detector de Anomalías en Signos Vitales
+  # ============================================================================
+  producer-anomaly-detector:
+    build:
+      context: ./producer-anomaly-detector
+      dockerfile: Dockerfile
+    container_name: vitalwatch-producer-anomaly
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: vitalwatch
+      RABBITMQ_PASSWORD: hospital123
+      QUEUE_ALERTS: vital-signs-alerts
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - vitalwatch-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  # ============================================================================
+  # Productor 2: Generador de Resúmenes Periódicos
+  # ============================================================================
+  producer-summary:
+    build:
+      context: ./producer-summary
+      dockerfile: Dockerfile
+    container_name: vitalwatch-producer-summary
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: vitalwatch
+      RABBITMQ_PASSWORD: hospital123
+      QUEUE_SUMMARY: vital-signs-summary
+      SUMMARY_INTERVAL_MS: 300000  # 5 minutos
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - vitalwatch-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  # ============================================================================
+  # Consumidor 1: Guardador de Alertas en Oracle Cloud
+  # ============================================================================
+  consumer-db-saver:
+    build:
+      context: ./consumer-db-saver
+      dockerfile: Dockerfile
+    container_name: vitalwatch-consumer-db
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: vitalwatch
+      RABBITMQ_PASSWORD: hospital123
+      QUEUE_ALERTS: vital-signs-alerts
+      ORACLE_URL: jdbc:oracle:thin:@(description=(retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=g64afca1579a0d2_s58onuxcx4c1qxe9_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+      ORACLE_USERNAME: ADMIN
+      ORACLE_PASSWORD: $$-123.Sb-123
+    volumes:
+      - ./backend/wallet:/app/wallet:ro
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - vitalwatch-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # Consumidor 2: Generador de Archivos JSON
+  # ============================================================================
+  consumer-json-generator:
+    build:
+      context: ./consumer-json-generator
+      dockerfile: Dockerfile
+    container_name: vitalwatch-consumer-json
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: vitalwatch
+      RABBITMQ_PASSWORD: hospital123
+      QUEUE_ALERTS: vital-signs-alerts
+      JSON_OUTPUT_PATH: /app/data/alerts
+    volumes:
+      - ./alerts-json:/app/data/alerts
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - vitalwatch-network
+    restart: unless-stopped
+
+# ============================================================================
+# Volúmenes
+# ============================================================================
+volumes:
+  rabbitmq_data:
+    driver: local
+  rabbitmq_log:
+    driver: local
+
+# ============================================================================
+# Red
+# ============================================================================
+networks:
+  vitalwatch-network:
+    driver: bridge
