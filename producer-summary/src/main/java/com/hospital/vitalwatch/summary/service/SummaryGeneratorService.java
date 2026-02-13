@@ -114,10 +114,21 @@ public class SummaryGeneratorService {
         return new SummaryStats(summaryCount, LocalDateTime.now());
     }
 
-    @Data
-    @AllArgsConstructor
     public static class SummaryStats {
         private int totalSummariesGenerated;
         private LocalDateTime lastCheck;
+
+        public SummaryStats(int totalSummariesGenerated, LocalDateTime lastCheck) {
+            this.totalSummariesGenerated = totalSummariesGenerated;
+            this.lastCheck = lastCheck;
+        }
+
+        public int getTotalSummariesGenerated() {
+            return totalSummariesGenerated;
+        }
+
+        public LocalDateTime getLastCheck() {
+            return lastCheck;
+        }
     }
 }

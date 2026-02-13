@@ -103,11 +103,27 @@ public class AlertConsumerService {
         return new ConsumerStats(messagesProcessed, messagesFailed, totalInDb);
     }
 
-    @Data
-    @AllArgsConstructor
     public static class ConsumerStats {
         private long messagesProcessed;
         private long messagesFailed;
         private long totalAlertsInDatabase;
+
+        public ConsumerStats(long messagesProcessed, long messagesFailed, long totalAlertsInDatabase) {
+            this.messagesProcessed = messagesProcessed;
+            this.messagesFailed = messagesFailed;
+            this.totalAlertsInDatabase = totalAlertsInDatabase;
+        }
+
+        public long getMessagesProcessed() {
+            return messagesProcessed;
+        }
+
+        public long getMessagesFailed() {
+            return messagesFailed;
+        }
+
+        public long getTotalAlertsInDatabase() {
+            return totalAlertsInDatabase;
+        }
     }
 }

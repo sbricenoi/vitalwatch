@@ -1,0 +1,581 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    GUIÓN DE PRESENTACIÓN - VIDEO DEMOSTRATIVO
+                              PROYECTO VITALWATCH
+                    Sistema de Alertas Médicas en Tiempo Real
+═══════════════════════════════════════════════════════════════════════════════
+
+INFORMACIÓN GENERAL:
+Duración total: 10-12 minutos
+Formato: Video con demostración en vivo
+Herramienta: Microsoft Teams (grabación de pantalla)
+Asignatura: Desarrollo Cloud Native I (DSY2206)
+
+ESTRUCTURA DE LA PRESENTACIÓN:
+1. Introducción (1 min)
+2. Arquitectura del Sistema (1.5 min)
+3. Demostración del Despliegue en Azure (2 min)
+4. Demostración Frontend (2 min)
+5. Demostración Backend y APIs con Postman (2.5 min)
+6. Demostración de Integración con Oracle Cloud (1 min)
+7. Demostración del API Manager (1 min)
+8. Cierre y Conclusiones (1 min)
+
+═══════════════════════════════════════════════════════════════════════════════
+                        1. INTRODUCCIÓN (1 minuto)
+═══════════════════════════════════════════════════════════════════════════════
+
+[MOSTRAR: Slide con título del proyecto o pantalla inicial]
+
+LOCUTOR 1:
+"Buenos días/tardes. Somos [Nombre del Grupo] y en esta presentación vamos a 
+demostrar nuestro proyecto VitalWatch, un sistema de alertas médicas en tiempo 
+real desarrollado con arquitectura Cloud Native.
+
+VitalWatch es un sistema completo que permite a profesionales médicos monitorear 
+signos vitales de pacientes críticos, generando alertas automáticas cuando los 
+valores se encuentran fuera de rangos normales.
+
+El proyecto ha sido desarrollado cumpliendo con todos los requisitos de la 
+asignatura:
+- Backend con Spring Boot y microservicios
+- Frontend con Angular
+- API Manager con Kong Gateway
+- Autenticación y seguridad con Spring Security
+- Base de datos Oracle Cloud
+- Y completamente desplegado en Microsoft Azure
+
+Comencemos mostrando la arquitectura general del sistema."
+
+═══════════════════════════════════════════════════════════════════════════════
+                   2. ARQUITECTURA DEL SISTEMA (1.5 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+[MOSTRAR: Diagrama de arquitectura o archivo docs/arquitectura.md]
+
+LOCUTOR 2:
+"La arquitectura de VitalWatch está basada en microservicios y sigue el patrón 
+Cloud Native. Permítanme explicar los componentes principales:
+
+En la capa de presentación tenemos:
+- El Frontend desarrollado en Angular 17, desplegado en Azure Container Apps
+- Una interfaz responsive y moderna que se comunica con el backend mediante APIs REST
+
+En la capa de aplicación contamos con:
+- Kong Gateway como API Manager para gestión centralizada de endpoints
+- El Backend BFF desarrollado con Spring Boot 3.2
+- Implementamos Spring Security para autenticación y autorización
+- Todos los microservicios están containerizados con Docker
+
+Y en la capa de datos:
+- Oracle Autonomous Database en Oracle Cloud Infrastructure
+- Ubicado en la región de Santiago, Chile
+- Conexión segura mediante Oracle Wallet con protocolo TLS/SSL
+
+Todo el sistema está desplegado en Azure Container Apps, lo cual nos permite 
+escalado automático y alta disponibilidad. Ahora les mostraré el despliegue en vivo."
+
+═══════════════════════════════════════════════════════════════════════════════
+              3. DEMOSTRACIÓN DEL DESPLIEGUE EN AZURE (2 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+[MOSTRAR: Portal de Azure en navegador]
+
+LOCUTOR 1:
+"Ahora vamos a entrar al portal de Azure para mostrar nuestra infraestructura 
+desplegada."
+
+[Navegar a portal.azure.com]
+
+"Como pueden ver, tenemos nuestro Resource Group 'rg-vitalwatch-prod' en la 
+región South Central US."
+
+[Click en el Resource Group]
+
+"Aquí podemos ver todos los recursos creados:
+
+Primero, tenemos nuestro Azure Container Registry 'acrvitalwatch' donde están 
+almacenadas todas nuestras imágenes Docker:
+- vitalwatch-backend
+- vitalwatch-frontend
+- vitalwatch-gateway"
+
+[Mostrar el Container Registry]
+
+"Ahora veamos nuestras Container Apps. Tenemos tres aplicaciones desplegadas:"
+
+[Click en vitalwatch-backend]
+
+"Esta es nuestra aplicación backend:
+- Tiene asignado 1 vCore de CPU y 2GB de memoria
+- Configurado para escalar entre 1 y 3 réplicas
+- Tiene una URL pública que vamos a probar en un momento"
+
+[Mostrar la URL pública]
+"La URL es: https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io"
+
+[Ir a la pestaña de Logs]
+
+"Aquí podemos ver los logs en tiempo real de nuestra aplicación. Como ven, el 
+backend está corriendo sin problemas."
+
+[Volver y mostrar vitalwatch-frontend]
+
+"Similarmente, tenemos nuestro frontend desplegado con su propia URL pública."
+
+[Mostrar ambiente de Container Apps]
+
+"Todos estos containers están corriendo en el mismo managed environment, lo que 
+nos da networking interno y gestión centralizada.
+
+Ahora les voy a mostrar la aplicación funcionando en vivo."
+
+═══════════════════════════════════════════════════════════════════════════════
+                    4. DEMOSTRACIÓN FRONTEND (2 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ABRIR: https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io]
+
+LOCUTOR 2:
+"Esta es la interfaz de VitalWatch corriendo desde Azure. Como pueden ver, 
+tenemos una pantalla de login profesional y moderna."
+
+[Mostrar la pantalla de login]
+
+"El sistema implementa autenticación con Spring Security. Vamos a iniciar sesión 
+con un usuario administrador."
+
+[Escribir credenciales]
+Email: admin@vitalwatch.com
+Password: Admin123!
+
+[Click en Login]
+
+"Perfecto, el login fue exitoso y ahora estamos en el dashboard principal."
+
+[Mostrar dashboard]
+
+"En el dashboard podemos ver:
+- Total de pacientes activos: 5 pacientes
+- Alertas pendientes: 8 alertas
+- Alertas críticas: 2 que requieren atención inmediata
+- Mediciones del día: 15 registros de signos vitales
+
+El diseño es completamente responsive y se adapta a diferentes dispositivos."
+
+[Navegar al módulo de Pacientes]
+
+"Ahora vamos al módulo de gestión de pacientes. Aquí tenemos la lista de todos 
+los pacientes registrados en el sistema."
+
+[Mostrar lista de pacientes]
+
+"Podemos ver información básica como nombre, RUT, estado y fecha de ingreso. 
+Vamos a crear un nuevo paciente para demostrar la funcionalidad CRUD."
+
+[Click en "Nuevo Paciente"]
+
+[Llenar formulario]
+"El formulario tiene validaciones en todos los campos:
+- Validación de RUT chileno
+- Validación de email
+- Validación de teléfono
+- Todos los campos requeridos están marcados"
+
+[Intentar guardar con datos inválidos]
+
+"Como ven, si intento guardar con datos inválidos, el sistema me muestra los 
+errores de validación."
+
+[Completar con datos válidos y guardar]
+
+Nombre: María
+Apellido: González
+RUT: 18.765.432-1
+Fecha Nacimiento: 15/03/1985
+Género: Femenino
+Teléfono: +56912345678
+Email: maria.gonzalez@email.com
+
+[Click en Guardar]
+
+"Perfecto, el paciente ha sido creado exitosamente. El sistema se comunica con 
+el backend mediante APIs REST."
+
+[Navegar al módulo de Signos Vitales]
+
+"Ahora vamos a registrar signos vitales para un paciente."
+
+[Seleccionar un paciente y registrar signos vitales]
+
+Presión Sistólica: 180 (anormal - alta)
+Presión Diastólica: 110 (anormal - alta)
+Frecuencia Cardíaca: 120 (anormal - alta)
+Temperatura: 36.5 (normal)
+Saturación Oxígeno: 88 (anormal - baja)
+Frecuencia Respiratoria: 16 (normal)
+
+"Noten que estoy ingresando valores anormales intencionalmente para que el 
+sistema genere alertas automáticas."
+
+[Guardar]
+
+"Excelente, los signos vitales han sido registrados."
+
+[Navegar a Alertas]
+
+"Y como esperábamos, el sistema ha generado automáticamente alertas para los 
+valores anormales. Podemos ver alertas de severidad ALTA y CRÍTICA."
+
+[Mostrar detalle de una alerta]
+
+"Cada alerta muestra:
+- El paciente afectado
+- El tipo de anomalía
+- La severidad
+- El estado (pendiente, en revisión, resuelta)
+- Y permite al personal médico cambiar el estado y agregar observaciones"
+
+"Esta es la funcionalidad principal del frontend. Ahora vamos a ver el backend 
+y las APIs con Postman."
+
+═══════════════════════════════════════════════════════════════════════════════
+          5. DEMOSTRACIÓN BACKEND Y APIs CON POSTMAN (2.5 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ABRIR: Postman con la colección VitalWatch]
+
+LOCUTOR 1:
+"Ahora vamos a demostrar las APIs del backend utilizando Postman. Tenemos una 
+colección completa con todos los endpoints organizados."
+
+[Mostrar la colección]
+
+"La colección está organizada en carpetas:
+1. Autenticación
+2. Gestión de Pacientes
+3. Signos Vitales
+4. Alertas
+5. Dashboard
+6. Health Checks
+
+Y tenemos configurados dos ambientes: Local y Azure Production. Actualmente 
+estamos usando el ambiente de producción que apunta a Azure."
+
+[Mostrar variables de ambiente]
+baseUrl: https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io
+
+"Comencemos probando el endpoint de autenticación."
+
+[Seleccionar: POST /api/v1/auth/login]
+
+"Este es el endpoint de login. Voy a enviar las credenciales del administrador."
+
+[Mostrar body]
+{
+  "email": "admin@vitalwatch.com",
+  "password": "Admin123!"
+}
+
+[Click en Send]
+
+"Perfecto, el backend respondió con código 200. La respuesta incluye:
+- Un token de autenticación codificado en Base64
+- Información del usuario: ID, nombre, email y rol
+- El rol es ADMIN, lo que le da permisos completos"
+
+[Mostrar la respuesta]
+{
+  "code": "200",
+  "message": "Login exitoso",
+  "data": {
+    "token": "MTphZG1pbkB2aXRhbHdhdGNoLmNvbTpBRE1JTjpmMDBlZWRkOC05MDFjLTRlNTgtYTc2Yy1kYjk4YzUxYTE5MjM6MTc2OTQzOTkwODczNA==",
+    "tipo": "Bearer",
+    "id": 1,
+    "nombre": "Administrador Principal",
+    "email": "admin@vitalwatch.com",
+    "rol": "ADMIN"
+  }
+}
+
+"El token se guarda automáticamente en las variables de ambiente para usarlo 
+en las siguientes peticiones."
+
+[Seleccionar: GET /api/v1/pacientes]
+
+"Ahora vamos a listar todos los pacientes. Noten que en el header Authorization 
+se incluye automáticamente el token."
+
+[Click en Send]
+
+"Excelente, obtenemos la lista de todos los pacientes registrados en Oracle Database. 
+Tiempo de respuesta: solo 150 milisegundos."
+
+[Seleccionar: POST /api/v1/signos-vitales]
+
+"Ahora vamos a registrar signos vitales mediante la API."
+
+[Mostrar body]
+{
+  "pacienteId": 1,
+  "presionSistolica": 120,
+  "presionDiastolica": 80,
+  "frecuenciaCardiaca": 75,
+  "temperatura": 36.5,
+  "saturacionOxigeno": 98,
+  "frecuenciaRespiratoria": 16,
+  "observaciones": "Signos vitales normales"
+}
+
+[Click en Send]
+
+"Código 201 Created. Los signos vitales se han guardado correctamente en la 
+base de datos Oracle."
+
+[Seleccionar: GET /api/v1/alertas]
+
+"Ahora consultemos las alertas generadas."
+
+[Click en Send]
+
+"Aquí vemos todas las alertas, incluyendo las que generamos hace un momento 
+desde el frontend. El sistema está completamente integrado."
+
+[Seleccionar: GET /api/v1/health/db]
+
+"Finalmente, vamos a verificar la conexión con la base de datos."
+
+[Click en Send]
+
+{
+  "status": "UP",
+  "database": "Oracle",
+  "responseTime": "45ms"
+}
+
+"Perfecto, la conexión con Oracle Cloud está funcionando correctamente con un 
+tiempo de respuesta de solo 45 milisegundos."
+
+[Abrir navegador con Swagger]
+
+"También tenemos documentación interactiva con Swagger. Voy a abrir la URL:"
+
+[ABRIR: https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/swagger-ui.html]
+
+"Aquí está toda la documentación de nuestras APIs generada automáticamente por 
+OpenAPI. Los desarrolladores pueden explorar y probar todos los endpoints desde 
+esta interfaz."
+
+═══════════════════════════════════════════════════════════════════════════════
+        6. DEMOSTRACIÓN DE INTEGRACIÓN CON ORACLE CLOUD (1 minuto)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ABRIR: Oracle Cloud Console - cloud.oracle.com]
+
+LOCUTOR 2:
+"Ahora vamos a mostrar la base de datos Oracle Cloud que está almacenando toda 
+la información."
+
+[Login en Oracle Cloud]
+[Navegar a Autonomous Database]
+
+"Esta es nuestra base de datos Oracle Autonomous Database:
+- Nombre: s58onuxcx4c1qxe9
+- Región: Santiago, Chile
+- Tipo: Autonomous Transaction Processing
+- Estado: Disponible"
+
+[Click en la base de datos]
+
+"Podemos ver métricas en tiempo real:
+- CPU utilizado
+- Storage utilizado
+- Conexiones activas"
+
+[Ir a Service Console]
+
+"La base de datos está configurada con backups automáticos y alta disponibilidad. 
+Ahora vamos a ejecutar una consulta directa para verificar los datos."
+
+[Abrir SQL Developer Web o Database Actions]
+
+"Voy a ejecutar una consulta para ver los pacientes registrados:"
+
+SELECT * FROM PACIENTES ORDER BY FECHA_INGRESO DESC;
+
+[Ejecutar query]
+
+"Como pueden ver, aquí están todos los pacientes que vimos en la aplicación, 
+incluyendo el paciente María González que creamos hace un momento. Los datos 
+están perfectamente sincronizados entre el frontend, backend y Oracle Cloud."
+
+[Ejecutar otra consulta]
+
+SELECT COUNT(*) as TOTAL_ALERTAS FROM ALERTAS WHERE ESTADO = 'PENDIENTE';
+
+"Tenemos 8 alertas pendientes, exactamente lo que vimos en el dashboard. La 
+integración está funcionando perfectamente."
+
+═══════════════════════════════════════════════════════════════════════════════
+              7. DEMOSTRACIÓN DEL API MANAGER - KONG (1 minuto)
+═══════════════════════════════════════════════════════════════════════════════
+
+[MOSTRAR: Configuración de Kong o archivo kong.yml]
+
+LOCUTOR 1:
+"Ahora vamos a mostrar la integración del API Manager con Kong Gateway."
+
+[Abrir archivo: api-manager/kong.yml]
+
+"Este es nuestro archivo de configuración declarativa de Kong. Aquí tenemos 
+definidos:
+
+1. Los servicios upstream apuntando a nuestro backend
+2. Las rutas para cada endpoint
+3. Los plugins de seguridad y rate limiting"
+
+[Mostrar secciones del archivo]
+
+"Por ejemplo, aquí tenemos el servicio de autenticación:
+- Upstream: vitalwatch-backend:8080
+- Ruta: /api/v1/auth
+- Plugins: CORS, rate limiting
+
+Y aquí el servicio de pacientes con las mismas políticas aplicadas."
+
+[Si está desplegado Kong, mostrar métricas]
+
+"Kong nos proporciona:
+- Enrutamiento centralizado de todas las peticiones
+- Rate limiting para prevenir abuso: 100 peticiones por minuto por usuario
+- Logging centralizado de todas las peticiones
+- Transformación de requests y responses
+- Seguridad adicional a nivel de gateway"
+
+[Mostrar ejemplo de rate limiting si es posible]
+
+"Si intentamos hacer más de 100 peticiones por minuto, Kong nos responderá con 
+un error 429 'Too Many Requests', protegiendo nuestro backend de sobrecarga."
+
+"Esta capa de API Management es fundamental en una arquitectura de microservicios 
+profesional."
+
+═══════════════════════════════════════════════════════════════════════════════
+                  8. CIERRE Y CONCLUSIONES (1 minuto)
+═══════════════════════════════════════════════════════════════════════════════
+
+[VOLVER: A una pantalla de resumen o dashboard]
+
+LOCUTOR 2:
+"Para finalizar, vamos a resumir lo que hemos demostrado:
+
+✓ Un sistema completo de alertas médicas en tiempo real
+✓ Backend robusto desarrollado con Spring Boot, implementando arquitectura de 
+  microservicios y APIs RESTful
+✓ Frontend moderno con Angular, diseño responsive y excelente experiencia de usuario
+✓ Sistema de autenticación y autorización con Spring Security
+✓ API Manager con Kong Gateway para gestión centralizada
+✓ Base de datos Oracle Autonomous Database en Oracle Cloud
+✓ Despliegue completo en Microsoft Azure con URLs públicas funcionales
+✓ Todo el código gestionado con Git y GitHub con metodología colaborativa
+
+El sistema está completamente operativo y cumple con todos los requisitos de la 
+asignatura. Permite al personal médico:
+- Monitorear pacientes en tiempo real
+- Registrar signos vitales de forma rápida
+- Recibir alertas automáticas ante valores anormales
+- Gestionar la información de forma segura"
+
+LOCUTOR 1:
+"El proyecto demuestra la implementación exitosa de una arquitectura Cloud Native 
+completa, integrando múltiples tecnologías modernas y siguiendo las mejores 
+prácticas de desarrollo de software.
+
+Todo el código fuente está disponible en nuestro repositorio GitHub, junto con 
+documentación completa, scripts de despliegue y guías de instalación."
+
+AMBOS:
+"Muchas gracias por su atención. Quedamos atentos a sus preguntas y comentarios."
+
+═══════════════════════════════════════════════════════════════════════════════
+                              NOTAS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+ANTES DE GRABAR:
+
+1. PREPARAR EL AMBIENTE:
+   ✓ Cerrar pestañas innecesarias del navegador
+   ✓ Limpiar el escritorio
+   ✓ Configurar resolución de pantalla adecuada (1920x1080)
+   ✓ Desactivar notificaciones
+   ✓ Tener todos los URLs listos en bookmarks
+
+2. HERRAMIENTAS A TENER ABIERTAS:
+   ✓ Portal de Azure (portal.azure.com)
+   ✓ Frontend en Azure (URL pública)
+   ✓ Postman con colección cargada
+   ✓ Oracle Cloud Console (cloud.oracle.com)
+   ✓ Editor con archivo kong.yml
+   ✓ Documentación Swagger (opcional)
+
+3. CREDENCIALES LISTAS:
+   ✓ Admin: admin@vitalwatch.com / Admin123!
+   ✓ Médico: medico@vitalwatch.com / Medico123!
+   ✓ Azure login
+   ✓ Oracle Cloud login
+
+4. DATOS DE PRUEBA PREPARADOS:
+   ✓ JSON para crear paciente
+   ✓ JSON para registrar signos vitales
+   ✓ Queries SQL para Oracle
+
+5. DURANTE LA GRABACIÓN:
+   ✓ Hablar claro y a buen ritmo
+   ✓ No apresurarse
+   ✓ Esperar a que las pantallas carguen completamente
+   ✓ Señalar con el cursor lo que están explicando
+   ✓ Si algo falla, mantener la calma y explicar
+
+6. DISTRIBUCIÓN DE TAREAS:
+   Locutor 1: Introducción, Azure, Postman, Cierre
+   Locutor 2: Arquitectura, Frontend, Oracle, Kong
+
+7. TIMING RECOMENDADO:
+   - Mínimo: 8 minutos
+   - Óptimo: 10-12 minutos
+   - Máximo: 15 minutos
+
+8. PUNTOS CLAVE A DESTACAR (según pauta):
+   ✓ Despliegue en cloud con URLs públicas ✓
+   ✓ Conexión con Oracle Cloud funcionando ✓
+   ✓ Funcionamiento completo del sistema ✓
+   ✓ Características del frontend y backend ✓
+   ✓ Diseño y funcionalidades ✓
+   ✓ Integración del API Manager ✓
+   ✓ Seguridad y autenticación ✓
+
+═══════════════════════════════════════════════════════════════════════════════
+                           ENLACES DE REFERENCIA
+═══════════════════════════════════════════════════════════════════════════════
+
+URLs PARA LA DEMOSTRACIÓN:
+
+Frontend:
+https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io
+
+Backend:
+https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io
+
+Swagger:
+https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/swagger-ui.html
+
+Azure Portal:
+https://portal.azure.com
+
+Oracle Cloud:
+https://cloud.oracle.com
+
+═══════════════════════════════════════════════════════════════════════════════
+                              FIN DEL GUIÓN
+═══════════════════════════════════════════════════════════════════════════════
+
+¡Éxito en su presentación!

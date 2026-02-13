@@ -1,0 +1,71 @@
+Semana 6
+Desarrollo Cloud Native I (DSY2206)
+
+
+
+Pauta de evaluación sumativa
+ 
+Desarrollando sistema asíncrono con la utilización de colas
+A continuación, se presentan los descriptores de los niveles de logro con los que serás retroalimentado/a y/o evaluado/a:
+CL	Completamente Logrado (100%)  	Logro completo del manejo del indicador, se considera como el punto óptimo, de acuerdo al área evaluada, dentro del rango de competente
+L	Logrado (80%)	Logro del indicador, se observan pequeñas dificultades o errores para alcanzar el logro total y sobresaliendo de lo mínimo aceptable
+ML	Medianamente Logrado (60%)	Logro mínimo aceptable en el manejo del indicador que permite ser considerado competente
+LI	Logro Insuficiente (30%)	Logro insuficiente en el manejo del indicador, se observan varias dificultades o errores que no le permiten alcanzar el logro mínimo para ser considerado competente
+NL	No Logrado (0%)	Se observan un escaso, nulo o incorrecto logro en el manejo del indicador
+ 
+N°	Criterios	Completamente Logrado (100%)	Logrado (80%)	Medianamente Logrado (60%)	Logro Insuficiente
+(30%)	No Logrado
+(0%)
+1	Usa herramientas de trabajo colaborativo y repositorios en git para el desarrollo de aplicaciones en equipo de trabajo. 
+(Valor 10 puntos) 	Usa correctamente herramientas de trabajo colaborativo y repositorios en git para el manejo y organización del desarrollo de aplicaciones con la participación equitativa de los integrantes.
+(Valor 10 puntos) 	Usa correctamente herramientas de trabajo colaborativo y repositorios en git, pero presenta algunos errores en el manejo y organización del desarrollo de aplicaciones con la participación equitativa de los integrantes.
+(Valor 8 puntos) 	Usa correctamente herramientas de trabajo colaborativo y repositorios en git, pero presenta algunos errores en el manejo y organización del desarrollo de aplicaciones y no se evidencia la participación equitativa de los integrantes.
+(Valor 6 puntos) 	Presenta errores en el uso de las herramientas de trabajo colaborativo y repositorios en git, en el manejo y organización del desarrollo de aplicaciones y no se evidencia la participación equitativa de los integrantes.
+(Valor 3 puntos) 	No aplica el uso de herramientas de trabajo colaborativo ni repositorios en git. 
+(Valor 0 puntos) 
+2	Configura los recursos necesarios en docker para la creación de un servicio RabbitMQ
+(Valor 20 puntos)	Crea y configura de manera correcta todos los componentes necesarios para crear un servicio RabbitMQ
+(Valor 20 puntos)	Crea y configura los componentes necesarios para crear un servicio RabbitMQ con algunos problemas
+(Valor 16 puntos)	Crea y configura algunos de los componentes necesarios
+(Valor 12 puntos)	Crea, pero no configura algunos de los componentes necesarios.
+(Valor 6 puntos)	No crea ni configura ningún recurso
+(Valor 0 puntos)
+3	Configura dos colas RabbitMQ y publica mensajes
+(Valor 20 puntos)	Configura dos colas RabbitMQ y publica mensajes de manera correcta
+(Valor 20 puntos)
+	Configura dos colas RabbitMQ y publica mensajes con algunos problemas
+(Valor 16 puntos)	Configura dos colas RabbitMQ y publica mensajes con algunos problemas
+(Valor 12 puntos)
+	Configura dos colas RabbitMQ pero no publica 
+Mensajes
+(Valor 6 puntos)	No configura una cola MQ
+(Valor 0 puntos)
+4	Desarrolla dos microservicios que consumen mensajes desde la cola configurada
+(Valor 20 puntos)	Desarrolla dos microservicios que consumen mensajes desde la cola configurada correctamente
+(Valor 20 puntos)
+	Desarrolla dos microservicios que consumen mensajes desde la cola configurada con algunos problemas
+(Valor 16 puntos)	Desarrolla dos microservicios que consumen mensajes desde la cola configurada con muchos problemas
+(Valor 12 puntos)
+	Desarrolla dos microservicios que no consumen mensajes desde la cola configurada 
+(Valor 6 puntos)
+	No crea ningún microservicio
+(Valor 0 puntos)
+5	Desarrolla dos microservicios que producen mensajes hacia la cola configurada
+(Valor 20 puntos)	Desarrolla dos microservicios que producen mensajes hacia la cola configurada correctamente
+(Valor 20 puntos)
+	Desarrolla dos microservicios que producen mensajes hacia la cola configurada con algunos problemas
+(Valor 16 puntos)	Desarrolla dos microservicios que producen mensajes hacia la cola configurada con muchos problemas
+(Valor 12 puntos)
+	Desarrolla dos microservicios que no producen mensajes hacia la cola configurada
+(Valor 6 puntos)
+	No crea ningún microservicio
+(Valor 0 puntos)
+6	Presenta mediante el video abarcando todos los puntos solicitados (despliegue en cloud, ejecución cola MQ, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las integraciones. Dominio del tema, Que el desarrollo sea correcto, Cumplimiento de los tiempos de presentación, puntos requeridos) 
+(Valor 10 puntos) 	Presenta de manera completa mediante el video abarcando el 100% de los puntos solicitados (despliegue en cloud, ejecución cola MQ, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las integraciones. Dominio del tema, Que el desarrollo sea correcto, Cumplimiento de los tiempos de presentación, puntos requeridos)
+(Valor 10 puntos) 
+	(despliegue en cloud, ejecución cola MQ, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las integraciones. Dominio del tema, Que el desarrollo sea correcto, Cumplimiento de los tiempos de presentación, puntos requeridos)
+(Valor 8 puntos) 	(despliegue en cloud, ejecución cola MQ, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las integraciones. Dominio del tema, Que el desarrollo sea correcto, Cumplimiento de los tiempos de presentación, puntos requeridos)
+(Valor 6 puntos) 	(despliegue en cloud, ejecución cola MQ, conexión con Oracle Cloud, funcionamiento, características, diseño, funcionalidades de todas las integraciones. Dominio del tema, Que el desarrollo sea correcto, Cumplimiento de los tiempos de presentación, puntos requeridos)
+(Valor 3 puntos) 	No elabora la presentación mediante el vídeo.
+(Valor 0 puntos) 
+ 

@@ -1,0 +1,61 @@
+Semana 6
+Desarrollo Cloud Native I (DSY2206)
+
+
+Formato de respuesta
+Nombre estudiante: 	 
+Asignatura: 	Carrera: 
+Profesor: 	Fecha: 
+
+
+Descripción de la actividad
+En esta tercera semana deberán realizar de manera grupal (2 integrantes) la actividad sumativa de la Experiencia 1, llamada "Construyendo una solución Cloud Native completa considerando la gestión de usuario y componentes”. Para la primera tendrán que entregar en un archivo comprimido (.rar o .zip) los componentes creados con el código fuente de la aplicación para el BackEnd. Para la segunda parte deberán hacer una presentación, a través de un video para mostrar el correcto funcionamiento de sus microservicios, ejecución y pruebas mediante POSTMAN, así como verificación de que la información este siendo manipulada y almacenada en una Base de Datos Oracle.  
+
+Instrucciones específicas
+Parte I: Documentación
+1.	Deberán entregar en un archivo comprimido (.rar o .zip) los componentes creados. El comprimido deberá contener el código fuente de la aplicación.
+2.	Los microservicios creados deben cumplir con los siguientes aspectos:
+•	Deben ser desarrollados bajo el Framework Spring con spring boot. 
+•	Manejo y organización del utilizando herramientas colaborativas y de repositorios en GIT. 
+•	Los microservicios deben usar una conexión a una Base de Datos en Oracle donde estén construidas sus respectivas tablas para manipular su información. 
+•	Debe implementar todos los controladores necesarios para manipular las comunicaciones con RESTful (get,post,put,delete).
+•	Debe manipular POSTMAN para poder validar el correcto funcionamiento de las consultas
+
+
+ 
+Para la creación del sistema deberán tener en cuenta lo siguiente en el caso asignado:
+
+Caso
+“Desarrollar un sistema para la gestión y monitorización en tiempo real del transporte público, incluyendo ubicaciones de vehículos y horarios”. En esta segunda experiencia nos corresponde construir las piezas del backend relacionadas al sistema de monitoreo del paciente, por lo que tendremos una cola MQ y varios microservicios.
+Funcionalidades clave:
+•	Monitoreo continuo y actualizaciones en tiempo real:
+•	Los autobuses envían continuamente sus datos de ubicación GPS y horarios de llegada y salida.
+•	Cuando un autobús cambia de ruta o hay una actualización en los horarios, se envía un mensaje de actualización al sistema.
+
+•	Microservicios productores:
+•	Productor 1: recibe los datos de ubicación GPS de los autobuses y envía un mensaje a RabbitMQ cada vez que se actualiza la posición de un vehículo.
+•	Productor 2: envía actualizaciones de horarios y cambios de ruta a RabbitMQ para asegurar que la información esté siempre actualizada.
+
+•	Microservicios consumidores:
+•	Consumidor 1: recibe los mensajes de actualización de ubicaciones y guarda la información en una base de datos Oracle Cloud. Esto permite llevar un registro histórico de las ubicaciones de los vehículos y facilita el análisis posterior.
+•	Consumidor 2: recibe los mensajes de actualización de horarios y genera un archivo .json en una ubicación específica del sistema de archivos de la empresa. Estos archivos pueden ser utilizados para generar informes y realizar auditorías.
+ 
+Diagrama de flujo del proceso:
+Sistema de transporte público: monitorea continuamente las ubicaciones y horarios de los autobuses.
+
+Microservicios productores:
+•	Reciben datos en tiempo real.
+•	Detectan eventos relevantes y envían mensajes a RabbitMQ.
+RabbitMQ:
+•	Gestiona la cola de mensajes y los distribuye a los microservicios consumidores.
+Microservicios consumidores:
+•	Guardan los datos en Oracle Cloud.
+•	Generan archivos .json en una ruta definida.
+Equipo de gestión:
+•	Accede a los datos en la base de datos para análisis.
+•	Revisa los archivos .json para auditorías y reportes.
+Detalles técnicos:
+•	RabbitMQ: se configurará un broker de mensajes RabbitMQ que gestionará las colas para los mensajes de actualización de ubicaciones y horarios.
+•	Persistencia en Oracle Cloud: se utilizará una base de datos Oracle Cloud para almacenar los datos de las ubicaciones y horarios. El microservicio correspondiente usará Spring Data JPA o Hibernate para la interacción con la base de datos.
+•	Generación de archivos .json: un microservicio consumidor utilizará la biblioteca Jackson para serializar los mensajes de actualización en archivos .json, que se almacenarán en una ruta específica del sistema de archivos.
+	Deberán usar Docker para su desarrollo y deben tomar en consideración al momento de probar su desarrollo final cambiar las urls de las APIs de comunicación a las que genera Docker Lab una vez que los hayan subido y puesto a funcionar en el mismo.

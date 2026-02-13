@@ -1,0 +1,54 @@
+{
+  "pacienteId" : 8,
+  "pacienteNombre" : "Paciente Test 8",
+  "sala" : "UCI-A",
+  "cama" : "108",
+  "anomalies" : [ {
+    "tipo" : "CRITICA",
+    "parametro" : "Frecuencia Cardíaca",
+    "valorActual" : "160 lpm",
+    "rangoNormal" : "60-100 lpm",
+    "mensaje" : "Frecuencia cardíaca de 160 lpm está en rango crítico"
+  }, {
+    "tipo" : "CRITICA",
+    "parametro" : "Presión Sistólica",
+    "valorActual" : "190 mmHg",
+    "rangoNormal" : "90-120 mmHg",
+    "mensaje" : "Presión sistólica de 190 mmHg está en rango crítico"
+  }, {
+    "tipo" : "CRITICA",
+    "parametro" : "Presión Diastólica",
+    "valorActual" : "120 mmHg",
+    "rangoNormal" : "60-80 mmHg",
+    "mensaje" : "Presión diastólica de 120 mmHg está en rango crítico"
+  }, {
+    "tipo" : "CRITICA",
+    "parametro" : "Temperatura",
+    "valorActual" : "40.0 °C",
+    "rangoNormal" : "36.0-37.5 °C",
+    "mensaje" : "Temperatura de 40.0 °C está en rango crítico"
+  }, {
+    "tipo" : "CRITICA",
+    "parametro" : "Saturación de Oxígeno",
+    "valorActual" : "80 %",
+    "rangoNormal" : "95-100 %",
+    "mensaje" : "Saturación de oxígeno de 80% está en rango crítico"
+  }, {
+    "tipo" : "CRITICA",
+    "parametro" : "Frecuencia Respiratoria",
+    "valorActual" : "35 rpm",
+    "rangoNormal" : "12-20 rpm",
+    "mensaje" : "Frecuencia respiratoria de 35 rpm está en rango crítico"
+  } ],
+  "severity" : "CRITICA",
+  "detectedAt" : "2026-02-13T02:02:27.272475924",
+  "deviceId" : "DEVICE-008",
+  "vitalSigns" : {
+    "frecuenciaCardiaca" : 160,
+    "presionSistolica" : 190,
+    "presionDiastolica" : 120,
+    "temperatura" : "40.0",
+    "saturacionOxigeno" : 80,
+    "frecuenciaRespiratoria" : 35
+  }
+}

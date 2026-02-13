@@ -114,12 +114,33 @@ public class JsonGeneratorService {
         return new GeneratorStats(filesGenerated, filesFailed, totalFilesInDirectory, outputPath);
     }
 
-    @lombok.Data
-    @lombok.AllArgsConstructor
     public static class GeneratorStats {
         private long filesGenerated;
         private long filesFailed;
         private long totalFilesInDirectory;
         private String outputPath;
+
+        public GeneratorStats(long filesGenerated, long filesFailed, long totalFilesInDirectory, String outputPath) {
+            this.filesGenerated = filesGenerated;
+            this.filesFailed = filesFailed;
+            this.totalFilesInDirectory = totalFilesInDirectory;
+            this.outputPath = outputPath;
+        }
+
+        public long getFilesGenerated() {
+            return filesGenerated;
+        }
+
+        public long getFilesFailed() {
+            return filesFailed;
+        }
+
+        public long getTotalFilesInDirectory() {
+            return totalFilesInDirectory;
+        }
+
+        public String getOutputPath() {
+            return outputPath;
+        }
     }
 }
