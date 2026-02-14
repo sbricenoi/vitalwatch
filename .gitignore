@@ -22,6 +22,8 @@ ojdbc.properties
 # Contraseñas y credenciales
 **/application-*.properties
 !**/application.properties.example
+!**/application-azure.properties
+!**/application-docker.properties
 
 # ============================================================================
 # BACKEND (Spring Boot / Maven)
