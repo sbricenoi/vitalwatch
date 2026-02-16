@@ -1,0 +1,245 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    GUIÓN PRESENTACIÓN CORTA - VIDEO
+                         PROYECTO VITALWATCH
+                          (5-6 minutos MAX)
+═══════════════════════════════════════════════════════════════════════════════
+
+DURACIÓN: 5-6 minutos
+FORMATO: Demostración directa con Postman
+
+═══════════════════════════════════════════════════════════════════════════════
+                    1. INTRODUCCIÓN (30 segundos)
+═══════════════════════════════════════════════════════════════════════════════
+
+[MOSTRAR: Pantalla con título o directamente Postman abierto]
+
+"Hola, somos [Nombres] y vamos a demostrar VitalWatch, nuestro sistema de 
+alertas médicas en tiempo real.
+
+El sistema está desarrollado con:
+- Backend: Spring Boot con APIs REST
+- Frontend: Angular
+- Base de datos: Oracle Cloud
+- Desplegado completamente en: Microsoft Azure
+
+Todo el código está en GitHub: github.com/sbricenoi/vitalwatch
+
+Vamos directo a probar los endpoints con Postman."
+
+═══════════════════════════════════════════════════════════════════════════════
+                    2. DEMOSTRACIÓN POSTMAN (4 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+[ABRIR: Postman con la colección VitalWatch cargada]
+
+"Esta es nuestra colección de Postman con todos los endpoints organizados."
+
+[Mostrar carpetas]
+
+"Tenemos 6 secciones:
+1. Autenticación
+2. Health Checks
+3. Pacientes
+4. Signos Vitales
+5. Alertas
+6. Dashboard
+
+El backend está en Azure:"
+
+[Mostrar variable base_url]
+
+https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io
+
+"Empecemos probando."
+
+---
+
+ENDPOINT 1: LOGIN
+[Click en: 1. Autenticación > Login - Admin]
+
+"Primero hacemos login con el usuario admin."
+
+[Mostrar body]
+{
+  "email": "admin@vitalwatch.com",
+  "password": "Admin123!"
+}
+
+[Click Send]
+
+"Perfecto, obtenemos el token y los datos del usuario. El token se guarda 
+automáticamente para usarlo en las siguientes peticiones."
+
+[Mostrar response y resaltar el token]
+
+---
+
+ENDPOINT 2: LISTAR PACIENTES
+[Click en: 3. Pacientes > Listar Todos los Pacientes]
+
+"Ahora listamos los pacientes. Fíjense que el token va automático en el header."
+
+[Click Send]
+
+"Tenemos 9 pacientes registrados en Oracle Cloud. Código 200, respuesta exitosa."
+
+---
+
+ENDPOINT 3: CREAR PACIENTE
+[Click en: 3. Pacientes > Crear Nuevo Paciente]
+
+"Vamos a crear un paciente nuevo."
+
+[Mostrar body rápidamente]
+
+"Todos los campos están validados: nombre, apellido, RUT, edad, género, sala, 
+cama, estado."
+
+[Click Send]
+
+"Código 201 Created. Paciente creado con ID 10. Se ve el nombre completo y el 
+estado calculado automáticamente."
+
+---
+
+ENDPOINT 4: REGISTRAR SIGNOS VITALES
+[Click en: 4. Signos Vitales > Registrar Signos Vitales - Anormales]
+
+"Ahora vamos a registrar signos vitales con valores anormales para que el 
+sistema genere alertas automáticas."
+
+[Mostrar body rápidamente]
+
+"Valores fuera de rango:
+- Frecuencia cardíaca: 125 (crítico)
+- Presión: 165/95 (alto)
+- Temperatura: 38.9 (fiebre)
+- Saturación: 88 (baja)"
+
+[Click Send]
+
+"Código 201. Signos registrados. El campo 'tieneAlgunaAnormalidad' está en true."
+
+---
+
+ENDPOINT 5: VER ALERTAS
+[Click en: 5. Alertas > Listar Todas las Alertas]
+
+"Ahora veamos las alertas que se generaron automáticamente."
+
+[Click Send]
+
+"Tenemos 9 alertas en total. El sistema detectó automáticamente los valores 
+anormales que acabamos de registrar."
+
+[Click en: 5. Alertas > Obtener Alerta por ID]
+
+[Click Send]
+
+"Esta alerta es crítica por frecuencia cardíaca alta. Muestra el mensaje 
+descriptivo y el estado."
+
+---
+
+ENDPOINT 6: DASHBOARD
+[Click en: 6. Dashboard > Obtener Estadísticas]
+
+"Finalmente el dashboard."
+
+[Click Send]
+
+"Estadísticas en tiempo real:
+- 9 pacientes total
+- 3 críticos (33%)
+- 7 alertas activas
+- 5 alertas críticas
+
+Todo conectado con Oracle Cloud y funcionando en Azure."
+
+---
+
+ENDPOINT 7: HEALTH CHECK
+[Click en: 2. Health Checks > Health Check Base de Datos]
+
+"Para verificar que todo está bien, probamos la conexión con Oracle."
+
+[Click Send]
+
+"Status UP, database Oracle Cloud, connection OK. Todo funcionando 
+correctamente."
+
+═══════════════════════════════════════════════════════════════════════════════
+                    3. CIERRE (30 segundos)
+═══════════════════════════════════════════════════════════════════════════════
+
+[Volver a mostrar la colección completa]
+
+"Resumen rápido:
+
+✓ Sistema completo funcionando en Azure
+✓ Backend Spring Boot con APIs REST
+✓ Base de datos Oracle Cloud
+✓ Todos los endpoints CRUD operativos
+✓ Generación automática de alertas
+✓ Código completo en GitHub
+
+Cumple con todos los requisitos:
+- Microservicios con Spring Boot ✓
+- Base de datos Oracle Cloud ✓
+- Gestión con Git/GitHub ✓
+- Despliegue en cloud con URL pública ✓
+- Pruebas completas con Postman ✓
+
+Gracias."
+
+═══════════════════════════════════════════════════════════════════════════════
+                            NOTAS RÁPIDAS
+═══════════════════════════════════════════════════════════════════════════════
+
+ANTES DE GRABAR:
+✓ Postman abierto con colección importada
+✓ Variables configuradas (base_url, api_version)
+✓ Cerrar pestañas innecesarias
+✓ Desactivar notificaciones
+
+DURANTE:
+✓ Hablar claro y rápido (pero no apurado)
+✓ No detenerse mucho en cada endpoint
+✓ Solo mostrar los códigos de respuesta y datos principales
+✓ No explicar detalles técnicos profundos
+
+ENDPOINTS A PROBAR (en orden):
+1. POST /api/v1/auth/login (Admin)
+2. GET /api/v1/pacientes
+3. POST /api/v1/pacientes
+4. POST /api/v1/signos-vitales (anormales)
+5. GET /api/v1/alertas
+6. GET /api/v1/alertas/1
+7. GET /api/v1/dashboard/estadisticas
+8. GET /api/v1/health/database
+
+INFORMACIÓN CLAVE A MENCIONAR:
+- URL Backend: https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io
+- GitHub: github.com/sbricenoi/vitalwatch
+- Oracle Cloud Database: s58onuxcx4c1qxe9 (Santiago, Chile)
+- Tecnologías: Spring Boot + Angular + Oracle + Azure
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TIMING ESTIMADO:
+- Introducción: 30 seg
+- Login: 30 seg
+- Listar Pacientes: 20 seg
+- Crear Paciente: 30 seg
+- Registrar Signos: 40 seg
+- Ver Alertas: 40 seg
+- Dashboard: 30 seg
+- Health Check: 20 seg
+- Cierre: 30 seg
+TOTAL: ~4.5 minutos (dejar 1 min de margen)
+
+═══════════════════════════════════════════════════════════════════════════════
+                            FIN DEL GUIÓN
+═══════════════════════════════════════════════════════════════════════════════
+
+¡Suerte! Rápido, simple y al grano. 🚀

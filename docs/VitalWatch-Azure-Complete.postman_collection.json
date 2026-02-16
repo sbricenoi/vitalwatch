@@ -1,0 +1,467 @@
+{
+	"info": {
+		"_postman_id": "vitalwatch-azure-complete-2026",
+		"name": "VitalWatch Azure - Colección Completa",
+		"description": "Colección completa de endpoints para VitalWatch desplegado en Azure Container Apps.\n\n## 🌐 URLs de Servicios\n\n- **Backend:** https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io\n- **Frontend:** https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io\n- **Base de Datos:** Oracle Cloud (s58onuxcx4c1qxe9_high)\n\n## 📋 Configuración\n\n1. Importar en Postman\n2. Crear Environment con:\n   - `backend_url`: https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io\n   - `api_version`: v1\n\n## 🔑 Usuarios de Prueba\n\n- **Admin:** admin@vitalwatch.com / Admin123!\n- **Médico:** medico@vitalwatch.com / Medico123!\n- **Enfermera:** enfermera@vitalwatch.com / Enfermera123!\n\n## 📊 Datos de Prueba\n\n- 10 pacientes en UCI\n- 23+ signos vitales registrados\n- 3 signos críticos creados para pruebas (IDs: 21, 22, 23)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. Health Check",
+			"item": [
+				{
+					"name": "Backend Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/health",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "health"]
+						},
+						"description": "Verifica el estado del backend"
+					}
+				}
+			]
+		},
+		{
+			"name": "1. Pacientes",
+			"item": [
+				{
+					"name": "Listar Pacientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/pacientes?page=0&size=10",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "pacientes"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
+							]
+						},
+						"description": "Lista todos los pacientes con paginación"
+					}
+				},
+				{
+					"name": "Obtener Paciente por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/pacientes/1",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "pacientes", "1"]
+						},
+						"description": "Obtiene un paciente específico (ID: 1 = Juan Pérez)"
+					}
+				},
+				{
+					"name": "Buscar Pacientes por Sala",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/pacientes/sala/UCI?page=0&size=10",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "pacientes", "sala", "UCI"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
+							]
+						},
+						"description": "Filtra pacientes por sala (UCI, Emergencia, etc.)"
+					}
+				},
+				{
+					"name": "Buscar Pacientes Críticos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/pacientes/estado/CRÍTICO?page=0&size=10",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "pacientes", "estado", "CRÍTICO"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
+							]
+						},
+						"description": "Lista pacientes en estado crítico"
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Signos Vitales",
+			"item": [
+				{
+					"name": "Listar Signos Vitales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales?page=0&size=10",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
+							]
+						},
+						"description": "Lista todos los signos vitales registrados"
+					}
+				},
+				{
+					"name": "Signos Vitales por Paciente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales?pacienteId=1&page=0&size=10",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales"],
+							"query": [
+								{"key": "pacienteId", "value": "1"},
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
+							]
+						},
+						"description": "Lista signos vitales de un paciente específico"
+					}
+				},
+				{
+					"name": "Signos Vitales Críticos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales?esCritico=true&page=0&size=10",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales"],
+							"query": [
+								{"key": "esCritico", "value": "true"},
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
+							]
+						},
+						"description": "Lista solo signos vitales críticos"
+					}
+				},
+				{
+					"name": "Crear Signo Vital NORMAL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 1,\n  \"frecuenciaCardiaca\": 75,\n  \"presionSistolica\": 120,\n  \"presionDiastolica\": 80,\n  \"temperatura\": 36.5,\n  \"saturacionOxigeno\": 98,\n  \"frecuenciaRespiratoria\": 16,\n  \"estadoConciencia\": \"ALERTA\",\n  \"observaciones\": \"Signos vitales normales - Test Postman\",\n  \"registradoPor\": \"Dr. Postman\"\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales"]
+						},
+						"description": "Crea un registro de signos vitales normales"
+					}
+				},
+				{
+					"name": "Crear Signo Vital CRÍTICO - Taquicardia",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 1,\n  \"frecuenciaCardiaca\": 155,\n  \"presionSistolica\": 185,\n  \"presionDiastolica\": 115,\n  \"temperatura\": 39.8,\n  \"saturacionOxigeno\": 83,\n  \"frecuenciaRespiratoria\": 32,\n  \"estadoConciencia\": \"DOLOR\",\n  \"observaciones\": \"ALERTA CRÍTICA: Taquicardia severa + hipertensión + hipoxemia - Test Postman\",\n  \"registradoPor\": \"Dr. Postman\"\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales"]
+						},
+						"description": "Crea un signo vital CRÍTICO con taquicardia severa"
+					}
+				},
+				{
+					"name": "Crear Signo Vital CRÍTICO - Bradicardia",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 3,\n  \"frecuenciaCardiaca\": 38,\n  \"presionSistolica\": 72,\n  \"presionDiastolica\": 42,\n  \"temperatura\": 35.2,\n  \"saturacionOxigeno\": 86,\n  \"frecuenciaRespiratoria\": 9,\n  \"estadoConciencia\": \"VERBAL\",\n  \"observaciones\": \"CRÍTICO: Bradicardia + shock + hipotermia - Test Postman\",\n  \"registradoPor\": \"Dr. Postman\"\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales"]
+						},
+						"description": "Crea un signo vital CRÍTICO con bradicardia y shock"
+					}
+				},
+				{
+					"name": "Crear Signo Vital CRÍTICO - Hipoxemia",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 6,\n  \"frecuenciaCardiaca\": 128,\n  \"presionSistolica\": 142,\n  \"presionDiastolica\": 88,\n  \"temperatura\": 38.9,\n  \"saturacionOxigeno\": 79,\n  \"frecuenciaRespiratoria\": 38,\n  \"estadoConciencia\": \"DOLOR\",\n  \"observaciones\": \"EMERGENCIA: Saturación crítica - Requiere intubación inmediata - Test Postman\",\n  \"registradoPor\": \"Dr. Postman\"\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales"]
+						},
+						"description": "Crea un signo vital CRÍTICO con hipoxemia severa"
+					}
+				},
+				{
+					"name": "Obtener Signo Vital por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/signos-vitales/21",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "signos-vitales", "21"]
+						},
+						"description": "Obtiene un signo vital específico (ID 21 = uno de los críticos de prueba)"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Estadísticas",
+			"item": [
+				{
+					"name": "Dashboard General",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/pacientes/dashboard",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "pacientes", "dashboard"]
+						},
+						"description": "Obtiene estadísticas generales del sistema"
+					}
+				},
+				{
+					"name": "Estadísticas por Sala",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/api/{{api_version}}/pacientes/estadisticas/sala",
+							"host": ["{{backend_url}}"],
+							"path": ["api", "{{api_version}}", "pacientes", "estadisticas", "sala"]
+						},
+						"description": "Obtiene estadísticas agrupadas por sala"
+					}
+				}
+			]
+		},
+		{
+			"name": "4. RabbitMQ Producers (Internos)",
+			"description": "Estos endpoints son INTERNOS y no son accesibles desde fuera de Azure. Se documentan para referencia.",
+			"item": [
+				{
+					"name": "[INTERNO] Producer Anomaly - Check Vital Signs",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pacienteId\": 1,\n  \"pacienteNombre\": \"Juan Pérez\",\n  \"pacienteSala\": \"UCI\",\n  \"pacienteCama\": \"A-01\",\n  \"frecuenciaCardiaca\": 155,\n  \"presionSistolica\": 185,\n  \"presionDiastolica\": 115,\n  \"temperatura\": 39.8,\n  \"saturacionOxigeno\": 83,\n  \"frecuenciaRespiratoria\": 32\n}"
+						},
+						"url": {
+							"raw": "https://vitalwatch-producer-anomaly.internal.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/api/v1/vital-signs/check",
+							"protocol": "https",
+							"host": [
+								"vitalwatch-producer-anomaly",
+								"internal",
+								"graycoast-fc35a2d0",
+								"southcentralus",
+								"azurecontainerapps",
+								"io"
+							],
+							"path": ["api", "v1", "vital-signs", "check"]
+						},
+						"description": "⚠️ ENDPOINT INTERNO - No accesible desde exterior\n\nDetecta anomalías en signos vitales y publica alertas a RabbitMQ si son críticos."
+					}
+				},
+				{
+					"name": "[INTERNO] Producer Anomaly - Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://vitalwatch-producer-anomaly.internal.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/api/v1/vital-signs/health",
+							"protocol": "https",
+							"host": [
+								"vitalwatch-producer-anomaly",
+								"internal",
+								"graycoast-fc35a2d0",
+								"southcentralus",
+								"azurecontainerapps",
+								"io"
+							],
+							"path": ["api", "v1", "vital-signs", "health"]
+						},
+						"description": "⚠️ ENDPOINT INTERNO - No accesible desde exterior"
+					}
+				},
+				{
+					"name": "[INTERNO] Producer Anomaly - Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://vitalwatch-producer-anomaly.internal.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/api/v1/vital-signs/stats",
+							"protocol": "https",
+							"host": [
+								"vitalwatch-producer-anomaly",
+								"internal",
+								"graycoast-fc35a2d0",
+								"southcentralus",
+								"azurecontainerapps",
+								"io"
+							],
+							"path": ["api", "v1", "vital-signs", "stats"]
+						},
+						"description": "⚠️ ENDPOINT INTERNO - No accesible desde exterior"
+					}
+				},
+				{
+					"name": "[INTERNO] Producer Summary - Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://vitalwatch-producer-summary.internal.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/actuator/health",
+							"protocol": "https",
+							"host": [
+								"vitalwatch-producer-summary",
+								"internal",
+								"graycoast-fc35a2d0",
+								"southcentralus",
+								"azurecontainerapps",
+								"io"
+							],
+							"path": ["actuator", "health"]
+						},
+						"description": "⚠️ ENDPOINT INTERNO - No accesible desde exterior"
+					}
+				}
+			]
+		},
+		{
+			"name": "5. RabbitMQ Consumers (Internos)",
+			"description": "Estos endpoints son INTERNOS. Los consumers escuchan la cola de RabbitMQ automáticamente.",
+			"item": [
+				{
+					"name": "[INTERNO] Consumer DB - Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://vitalwatch-consumer-db.internal.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/actuator/health",
+							"protocol": "https",
+							"host": [
+								"vitalwatch-consumer-db",
+								"internal",
+								"graycoast-fc35a2d0",
+								"southcentralus",
+								"azurecontainerapps",
+								"io"
+							],
+							"path": ["actuator", "health"]
+						},
+						"description": "⚠️ ENDPOINT INTERNO - No accesible desde exterior"
+					}
+				},
+				{
+					"name": "[INTERNO] Consumer DB - Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://vitalwatch-consumer-db.internal.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/api/consumer/stats",
+							"protocol": "https",
+							"host": [
+								"vitalwatch-consumer-db",
+								"internal",
+								"graycoast-fc35a2d0",
+								"southcentralus",
+								"azurecontainerapps",
+								"io"
+							],
+							"path": ["api", "consumer", "stats"]
+						},
+						"description": "⚠️ ENDPOINT INTERNO - No accesible desde exterior"
+					}
+				},
+				{
+					"name": "[INTERNO] Consumer JSON - Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://vitalwatch-consumer-json.internal.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/actuator/health",
+							"protocol": "https",
+							"host": [
+								"vitalwatch-consumer-json",
+								"internal",
+								"graycoast-fc35a2d0",
+								"southcentralus",
+								"azurecontainerapps",
+								"io"
+							],
+							"path": ["actuator", "health"]
+						},
+						"description": "⚠️ ENDPOINT INTERNO - No accesible desde exterior"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "backend_url",
+			"value": "https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io",
+			"type": "string"
+		},
+		{
+			"key": "api_version",
+			"value": "v1",
+			"type": "string"
+		}
+	]
+}
