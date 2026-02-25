@@ -1,0 +1,380 @@
+version: '3.8'
+
+# =============================================================================
+# VitalWatch - Apache Kafka Cluster
+# Sistema de Streaming de Signos Vitales en Tiempo Real
+# =============================================================================
+# 
+# Infraestructura:
+# - 3 Brokers Kafka (kafka1, kafka2, kafka3)
+# - 3 Nodos Zookeeper (zookeeper1, zookeeper2, zookeeper3)
+# - 1 Kafka UI (interfaz web)
+# - 4 Microservicios (2 productores + 2 consumidores)
+# 
+# =============================================================================
+
+networks:
+  vitalwatch-kafka-network:
+    driver: bridge
+
+volumes:
+  zookeeper1-data:
+  zookeeper1-log:
+  zookeeper2-data:
+  zookeeper2-log:
+  zookeeper3-data:
+  zookeeper3-log:
+  kafka1-data:
+  kafka2-data:
+  kafka3-data:
+
+services:
+  # ===========================================================================
+  # ZOOKEEPER CLUSTER (Coordinación del cluster Kafka)
+  # ===========================================================================
+  
+  zookeeper1:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: vitalwatch-zookeeper1
+    hostname: zookeeper1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper1:2888:3888;zookeeper2:2888:3888;zookeeper3:2888:3888
+    volumes:
+      - zookeeper1-data:/var/lib/zookeeper/data
+      - zookeeper1-log:/var/lib/zookeeper/log
+    networks:
+      - vitalwatch-kafka-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper2:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: vitalwatch-zookeeper2
+    hostname: zookeeper2
+    ports:
+      - "2182:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper1:2888:3888;zookeeper2:2888:3888;zookeeper3:2888:3888
+    volumes:
+      - zookeeper2-data:/var/lib/zookeeper/data
+      - zookeeper2-log:/var/lib/zookeeper/log
+    networks:
+      - vitalwatch-kafka-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper3:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: vitalwatch-zookeeper3
+    hostname: zookeeper3
+    ports:
+      - "2183:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zookeeper1:2888:3888;zookeeper2:2888:3888;zookeeper3:2888:3888
+    volumes:
+      - zookeeper3-data:/var/lib/zookeeper/data
+      - zookeeper3-log:/var/lib/zookeeper/log
+    networks:
+      - vitalwatch-kafka-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================================================
+  # KAFKA CLUSTER (3 Brokers para alta disponibilidad)
+  # ===========================================================================
+  
+  kafka1:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: vitalwatch-kafka1
+    hostname: kafka1
+    ports:
+      - "9092:9092"
+      - "19092:19092"
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:19092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
+    volumes:
+      - kafka1-data:/var/lib/kafka/data
+    networks:
+      - vitalwatch-kafka-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  kafka2:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: vitalwatch-kafka2
+    hostname: kafka2
+    ports:
+      - "9093:9092"
+      - "19093:19093"
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092,PLAINTEXT_HOST://localhost:19093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
+    volumes:
+      - kafka2-data:/var/lib/kafka/data
+    networks:
+      - vitalwatch-kafka-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  kafka3:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: vitalwatch-kafka3
+    hostname: kafka3
+    ports:
+      - "9094:9092"
+      - "19094:19094"
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092,PLAINTEXT_HOST://localhost:19094
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
+    volumes:
+      - kafka3-data:/var/lib/kafka/data
+    networks:
+      - vitalwatch-kafka-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ===========================================================================
+  # KAFKA UI (Interfaz gráfica para monitoreo)
+  # ===========================================================================
+  
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: vitalwatch-kafka-ui
+    ports:
+      - "9000:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    environment:
+      KAFKA_CLUSTERS_0_NAME: vitalwatch-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092,kafka2:9092,kafka3:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - vitalwatch-kafka-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===========================================================================
+  # MICROSERVICIO: PRODUCTOR 1 - Stream Generator
+  # Genera signos vitales cada 1 segundo (CRON)
+  # ===========================================================================
+  
+  producer-stream-generator:
+    build:
+      context: ./producer-stream-generator
+      dockerfile: Dockerfile
+    container_name: vitalwatch-producer-stream
+    hostname: producer-stream-generator
+    ports:
+      - "8091:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      KAFKA_BOOTSTRAP_SERVERS: kafka1:9092,kafka2:9092,kafka3:9092
+      KAFKA_TOPIC_VITAL_SIGNS: signos-vitales-stream
+      STREAM_GENERATION_ENABLED: 'true'
+      STREAM_INTERVAL_MS: 1000
+    networks:
+      - vitalwatch-kafka-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===========================================================================
+  # MICROSERVICIO: PRODUCTOR 2 - Alert Processor
+  # Consume signos vitales, detecta anomalías, publica alertas
+  # ===========================================================================
+  
+  producer-alert-processor:
+    build:
+      context: ./producer-alert-processor
+      dockerfile: Dockerfile
+    container_name: vitalwatch-producer-alert
+    hostname: producer-alert-processor
+    ports:
+      - "8092:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - producer-stream-generator
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      KAFKA_BOOTSTRAP_SERVERS: kafka1:9092,kafka2:9092,kafka3:9092
+      KAFKA_TOPIC_VITAL_SIGNS: signos-vitales-stream
+      KAFKA_TOPIC_ALERTS: alertas-medicas
+      KAFKA_GROUP_ID: alert-processor-group
+    networks:
+      - vitalwatch-kafka-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===========================================================================
+  # MICROSERVICIO: CONSUMIDOR 1 - Database Saver
+  # Consume ambos tópicos y guarda en Oracle Cloud
+  # ===========================================================================
+  
+  consumer-database-saver:
+    build:
+      context: ./consumer-database-saver
+      dockerfile: Dockerfile
+    container_name: vitalwatch-consumer-db-kafka
+    hostname: consumer-database-saver
+    ports:
+      - "8093:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - producer-alert-processor
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      KAFKA_BOOTSTRAP_SERVERS: kafka1:9092,kafka2:9092,kafka3:9092
+      KAFKA_TOPIC_VITAL_SIGNS: signos-vitales-stream
+      KAFKA_TOPIC_ALERTS: alertas-medicas
+      KAFKA_GROUP_ID_VITAL_SIGNS: db-saver-vital-signs-group
+      KAFKA_GROUP_ID_ALERTS: db-saver-alerts-group
+      ORACLE_DB_URL: jdbc:oracle:thin:@(description=(retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1521)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=s58onuxcx4c1qxe9_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+      ORACLE_DB_USERNAME: ADMIN
+      ORACLE_DB_PASSWORD: $$-123.Sb-123
+    volumes:
+      - ./Wallet_S58ONUXCX4C1QXE9:/app/wallet:ro
+    networks:
+      - vitalwatch-kafka-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===========================================================================
+  # MICROSERVICIO: CONSUMIDOR 2 - Summary Generator
+  # Genera resúmenes diarios del sistema
+  # ===========================================================================
+  
+  consumer-summary-generator:
+    build:
+      context: ./consumer-summary-generator
+      dockerfile: Dockerfile
+    container_name: vitalwatch-consumer-summary-kafka
+    hostname: consumer-summary-generator
+    ports:
+      - "8094:8080"
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - producer-alert-processor
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      KAFKA_BOOTSTRAP_SERVERS: kafka1:9092,kafka2:9092,kafka3:9092
+      KAFKA_TOPIC_VITAL_SIGNS: signos-vitales-stream
+      KAFKA_TOPIC_ALERTS: alertas-medicas
+      KAFKA_GROUP_ID: summary-generator-group
+      ORACLE_DB_URL: jdbc:oracle:thin:@(description=(retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1521)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=s58onuxcx4c1qxe9_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+      ORACLE_DB_USERNAME: ADMIN
+      ORACLE_DB_PASSWORD: $$-123.Sb-123
+    volumes:
+      - ./Wallet_S58ONUXCX4C1QXE9:/app/wallet:ro
+    networks:
+      - vitalwatch-kafka-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

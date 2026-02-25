@@ -24,6 +24,7 @@ Sistema Cloud Native para monitoreo en tiempo real de signos vitales de paciente
 
 - [Descripción](#-descripción)
 - [Arquitectura](#-arquitectura)
+- [Apache Kafka Integration](#-apache-kafka-integration-new)
 - [Stack Tecnológico](#-stack-tecnológico)
 - [Inicio Rápido](#-inicio-rápido)
 - [Documentación](#-documentación)
@@ -95,6 +96,91 @@ Usuario → Frontend → API Gateway → Backend → Oracle DB
                                       ↓
                                   Response
 ```
+
+---
+
+## 🚀 Apache Kafka Integration (NEW)
+
+VitalWatch ahora incluye un sistema de streaming en tiempo real con Apache Kafka para procesamiento continuo de signos vitales.
+
+### Arquitectura Kafka
+
+```
+┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+│ Stream Generator │ ───► │  Kafka Cluster   │ ───► │ Alert Processor  │
+│  (Producer 1)    │      │  (3 Brokers)     │      │  (Producer 2)    │
+│  :8081           │      │  + Kafka UI      │      │  :8082           │
+│                  │      │  :8080           │      │                  │
+│ • Genera signos  │      │                  │      │ • Detecta        │
+│   cada 1 seg     │      │ Topics:          │      │   anomalías      │
+│ • 5 pacientes    │      │ - signos-vitales │      │ • Publica        │
+│ • CRON scheduler │      │ - alertas        │      │   alertas        │
+└──────────────────┘      └──────────────────┘      └──────────────────┘
+                                   │
+                    ┌──────────────┴──────────────┐
+                    │                             │
+         ┌──────────▼────────┐         ┌─────────▼─────────┐
+         │ Database Saver    │         │ Summary Generator │
+         │  (Consumer 1)     │         │  (Consumer 2)     │
+         │                   │         │  :8083            │
+         │ • Guarda signos   │         │                   │
+         │   vitales en BD   │         │ • Resúmenes       │
+         │ • Guarda alertas  │         │   diarios         │
+         │ • Oracle Cloud    │         │ • CRON medianoche │
+         └───────────────────┘         └───────────────────┘
+                    │
+         ┌──────────▼────────┐
+         │  Oracle Cloud DB  │
+         │                   │
+         │ • SIGNOS_VITALES  │
+         │   _KAFKA          │
+         │ • ALERTAS_KAFKA   │
+         │ • RESUMEN_DIARIO  │
+         │   _KAFKA          │
+         └───────────────────┘
+```
+
+### Inicio Rápido Kafka
+
+```bash
+# 1. Iniciar cluster Kafka
+./start-kafka-cluster.sh
+
+# 2. Crear tópicos
+./create-kafka-topics.sh
+
+# 3. Crear tablas en Oracle
+# Ejecutar: database/create_tables_kafka.sql
+
+# 4. Iniciar microservicios
+docker-compose -f docker-compose-kafka.yml up -d
+
+# 5. Iniciar stream
+curl -X POST http://localhost:8081/api/v1/stream/start
+
+# 6. Ver Kafka UI
+# Abrir: http://localhost:8080
+```
+
+### Documentación Kafka
+
+- 📖 [README_KAFKA.md](README_KAFKA.md) - Guía completa de Kafka
+- 🏗️ [docs/ARQUITECTURA_KAFKA.md](docs/ARQUITECTURA_KAFKA.md) - Arquitectura detallada
+- 🧪 [GUIA_PRUEBAS_KAFKA.md](GUIA_PRUEBAS_KAFKA.md) - Guía de pruebas
+- 🎥 [DIALOGO_PRESENTACION_KAFKA.md](DIALOGO_PRESENTACION_KAFKA.md) - Guión para video
+- 📋 [PLAN_KAFKA_SEMANA8.md](PLAN_KAFKA_SEMANA8.md) - Plan de implementación
+
+### Características Kafka
+
+- ✅ Cluster de 3 brokers + 3 Zookeepers
+- ✅ 2 tópicos: `signos-vitales-stream` y `alertas-medicas`
+- ✅ Stream continuo (1 mensaje/segundo = 86,400 mensajes/día)
+- ✅ Detección de anomalías en tiempo real
+- ✅ Persistencia en Oracle Cloud
+- ✅ Resúmenes diarios automáticos
+- ✅ Kafka UI para monitoreo visual
+- ✅ Consumer groups independientes
+- ✅ Replicación de datos (RF=2)
 
 ---
 

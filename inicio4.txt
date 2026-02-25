@@ -1,0 +1,510 @@
+
+Descripción de la actividad
+Finalizando la asignatura en esta semana 8, deberás hacer la actividad sumativa de la
+Experiencia 3, llamada "Consumiendo Stream de datos", de manera grupal (2 estudiantes),
+donde tendrán que construir un componente de Back End que se conecte a un Stream de
+datos para poder obtener información según el requerimiento, el caso será el mismo que se
+ha desarrollado en las actividades sumativas anteriores. Finalmente, como parte dos
+deberán hacer un video de presentación de lo realizado.
+Instrucciones específicas
+Parte I: Documentación
+1. Deberán entregar en un archivo comprimido (.rar o .zip) los componentes creados. El
+comprimido deberá contener el código fuente de la aplicación.
+2. El cluster de Kafka debe estar configurado en 3 contenedores, mas 3 contenedores de
+zookeeper y uno con kafka-ui, ademas hay que considerar que hay que levantar tanto
+la cola como los microservicios utilizando docker-compose
+3. Los microservicios creados deben cumplir con los siguientes aspectos:
+• Deben ser desarrollados bajo el Framework Spring con spring boot.
+• Manejo y organización del utilizando herramientas colaborativas y de repositorios
+en GIT.
+• Los microservicios deben usar una conexión a una Base de Datos en Oracle donde
+estén construidas sus respectivas tablas para manipular su información.
+• Debe implementar todos los controladores necesarios para manipular las comunicaciones
+con RESTful (get,post,put,delete).
+• Debe manipular POSTMAN para poder validar el correcto funcionamiento de las consultas.
+• También adjunta en el ZIP este formato de respuesta.
+Para la creación del sistema deberán tener en cuenta lo siguiente en el caso asignado:
+Caso
+“Desarrollar un sistema para la gestión y monitorización en tiempo real del transporte público,
+incluyendo ubicaciones de vehículos y horarios”. En esta tercera experiencia nos corresponde
+construir las piezas del backend relacionadas al sistema de monitoreo del paciente, por lo que
+tendremos un cluster Kafka y varios microservicios.
+Funcionalidades clave
+Tarea 1: Configuración del clúster Kafka
+1. Configurar un clúster Kafka:
+• Configura un clúster Kafka en la nube con al menos tres nodos.
+• Asegúrate de que el clúster sea accesible y esté corriendo.
+• Crear un tópico para las señales vitales:
+• Crea un tópico llamado “ubicaciones_vehiculos” donde se publicarán las
+actualizaciones de ubicación de los vehículos.
+• Crea un tópico llamado “horarios” donde se publicarán las actualizaciones de los
+horarios de los vehículos.
+Tarea 2: Implementación de microservicios
+Microservicio productor de ubicaciones:
+• Desarrolla un microservicio que registre las actualizaciones de ubicación de los
+vehículos y las publique en el tópico “ubicaciones_vehiculos” de Kafka.
+• Asegúrate de que las ubicaciones se registren en tiempo real.
+4
+Microservicio de Procesamiento de Señales:
+• Desarrolla un microservicio que consuma mensajes del tópico
+“ubicaciones_vehiculos” de Kafka.
+• Implementa lógica para actualizar los horarios basado en las ubicaciones de los
+vehículos.
+• Publica las actualizaciones de horarios en el tópico “horarios” de Kafka.
+Microservicio de Monitorización:
+• Desarrolla un microservicio que lea las actualizaciones de horarios y ubicaciones
+desde los tópicos “horarios” y “ubicaciones_vehiculos” en Kafka.
+• Este microservicio debe guardar en una base de datos Oracle Cloud el registro
+de las ubicaciones y horarios de los vehículos, generando un resumen de
+ubicaciones en la base de datos al final del día, mostrando a nivel general los
+lugares visitados y horarios en los que se llegó al lugar.
+Detalles Técnicos:
+• Cluster Kafka: se configurará un cluster Kafka sobre docker lab, el cual debe
+tener 3 nodos de kafka, 3 nodos de zookeeper y un nodo de kafka-ui para la
+interfaz gráfica.
+• Persistencia en Oracle Cloud: se utilizará una base de datos Oracle Cloud para
+almacenar los datos de las alertas. El microservicio correspondiente usará
+Spring Data JPA o Hibernate para la interacción con la base de datos.
+• Productor de ubicaciones: un microservicio productor utilizará un cron para
+poder generar la información necesaria cada un segundo.
+• Deberán usar Docker para su desarrollo y deben tomar en consideración al
+momento de probar su desarrollo final cambiar las urls de las APIs de
+comunicación a las que genera Docker Lab una vez que los hayan subido y
+puesto a funcionar en el mismo
+
+
+
+
+
+Consumiendo Stream de datos
+A continuación, se presentan los descriptores de los niveles de logro con los que serás
+retroalimentado/a y/o evaluado/a:
+CL Completamente
+Logrado (100%)
+Logro completo del manejo del indicador, se considera como
+el punto óptimo, de acuerdo al área evaluada, dentro del
+rango de competente
+L Logrado (80%)
+Logro del indicador, se observan pequeñas dificultades o
+errores para alcanzar el logro total y sobresaliendo de lo
+mínimo aceptable
+ML Medianamente
+Logrado (60%)
+Logro mínimo aceptable en el manejo del indicador que
+permite ser considerado competente
+LI Logro Insuficiente
+(30%)
+Logro insuficiente en el manejo del indicador, se observan
+varias dificultades o errores que no le permiten alcanzar el
+logro mínimo para ser considerado competente
+NL No Logrado (0%) Se observan un escaso, nulo o incorrecto logro en el
+manejo del indicador
+N° Criterios Completamente
+Logrado (100%)
+Logrado
+(80%)
+Medianamente
+Logrado (60%)
+Logro
+Insuficiente
+(30%)
+No
+Logrado
+(0%)
+1 Usa
+herramientas
+de trabajo
+colaborativo y
+repositorios en
+git para el
+desarrollo de
+aplicaciones
+en equipo de
+trabajo.
+(Valor 10
+puntos)
+Usa correctamente
+herramientas de
+trabajo colaborativo y
+repositorios en git
+para el manejo y
+organización del
+desarrollo de
+aplicaciones con la
+participación
+equitativa de los
+integrantes.
+(Valor 10 puntos)
+Usa
+correctamente
+herramientas
+de trabajo
+colaborativo y
+repositorios en
+git, pero
+presenta
+algunos
+errores en el
+manejo y
+organización
+del desarrollo
+de
+aplicaciones
+con la
+participación
+equitativa de
+los
+integrantes.
+(Valor 8
+puntos)
+Usa correctamente
+herramientas de
+trabajo colaborativo
+y repositorios en
+git, pero presenta
+algunos errores en
+el manejo y
+organización del
+desarrollo de
+aplicaciones y no
+se evidencia la
+participación
+equitativa de los
+integrantes.
+(Valor 6 puntos)
+Presenta
+errores en el
+uso de las
+herramientas
+de trabajo
+colaborativo y
+repositorios en
+git, en el
+manejo y
+organización
+del desarrollo
+de
+aplicaciones y
+no se
+evidencia la
+participación
+equitativa de
+los
+integrantes.
+(Valor 3
+puntos)
+No aplica el
+uso de
+herramientas
+de trabajo
+colaborativo ni
+repositorios en
+git.
+(Valor 0
+puntos)
+2 Configura los
+recursos
+necesarios en
+docker para la
+creación de un
+cluster Kafka
+(Valor 20
+puntos)
+Crea y configura de
+manera correcta
+todos los
+componentes
+necesarios para
+crear un cluster
+Kafka
+(Valor 20 puntos)
+Crea y
+configura los
+componentes
+necesarios
+para crear un
+cluster Kafka
+con algunos
+problemas
+(Valor 16
+puntos)
+Crea y configura
+algunos de los
+componentes
+necesarios
+(Valor 12 puntos)
+Crea, pero no
+configura
+algunos de los
+componentes
+necesarios
+(Valor 6
+puntos)
+No crea ni
+configura
+ningún recurso
+(Valor 0
+puntos)
+3 Configura dos
+tópicos en
+Kafka y
+publica
+mensajes
+(Valor 20
+puntos)
+Configura dos
+tópicos en Kafka y
+publica mensajes de
+manera correcta
+(Valor 20 puntos)
+Configura dos
+tópicos en
+Kafka y
+publica
+mensajes con
+algunos
+problemas
+(Valor 16
+puntos)
+Configura tópicos
+en Kafka y publica
+mensajes con
+algunos problemas
+(Valor 12 puntos)
+Configura dos
+tópicos pero
+no publica
+mensajes
+(Valor 6
+puntos)
+No configura
+una cola Kafka
+(Valor 0
+puntos)
+4 Desarrolla dos
+microservicios
+que consumen
+mensajes
+desde la cola
+configurada
+(Valor 20
+puntos)
+Desarrolla dos
+microservicios que
+consumen mensajes
+desde la cola
+configurada
+correctamente.
+(Valor 20 puntos)
+Desarrolla dos
+microservicios
+que consumen
+mensajes
+desde la cola
+configurada
+con algunos
+problemas
+(Valor 16
+puntos)
+Desarrolla dos
+microservicios que
+consumen
+mensajes desde la
+cola configurada
+con muchos
+problemas
+(Valor 12 puntos)
+Desarrolla dos
+microservicios
+que no
+consumen
+mensajes
+desde la cola
+configurada
+(Valor 6
+puntos)
+No crea
+ningún
+microservicio
+(Valor 0
+puntos)
+5 Desarrolla dos
+microservicios
+que producen
+mensajes
+hacia la cola
+configurada
+(Valor 20
+puntos)
+Desarrolla dos
+microservicios que
+producen mensajes
+hacia la cola
+configurada
+correctamente
+(Valor 20 puntos)
+Desarrolla dos
+microservicios
+que producen
+mensajes
+hacia la cola
+configurada
+con algunos
+problemas
+(Valor 16
+puntos)
+Desarrolla dos
+microservicios que
+producen mensajes
+hacia la cola
+configurada con
+muchos problemas
+(Valor 12 puntos)
+Desarrolla dos
+microservicios
+que no
+producen
+mensajes
+hacia la cola
+configurada
+(Valor 6
+puntos)
+No crea
+ningún
+microservicio
+(Valor 0
+puntos)
+6 Presenta
+mediante el
+video
+abarcando
+todos los
+puntos
+solicitados
+(despliegue en
+cloud,
+ejecución
+kafka,
+conexión con
+Oracle Cloud,
+funcionamient
+o,
+características
+, diseño,
+funcionalidade
+s de todas las
+integraciones.
+Dominio del
+tema, Que el
+desarrollo sea
+correcto,
+Cumplimiento
+de los tiempos
+de
+presentación,
+puntos
+requeridos)
+(Valor 10
+puntos)
+Presenta de manera
+completa mediante el
+video abarcando el
+100% de los puntos
+solicitados
+(despliegue en cloud,
+ejecución kafka,
+conexión con Oracle
+Cloud,
+funcionamiento,
+características,
+diseño,
+funcionalidades de
+todas las
+integraciones.
+Dominio del tema,
+Que el desarrollo sea
+correcto,
+Cumplimiento de los
+tiempos de
+presentación, puntos
+requeridos)
+(Valor 10 puntos)
+(despliegue en
+cloud,
+ejecución
+kafka,
+conexión con
+Oracle Cloud,
+funcionamient
+o,
+características
+, diseño,
+funcionalidade
+s de todas las
+integraciones.
+Dominio del
+tema, Que el
+desarrollo sea
+correcto,
+Cumplimiento
+de los tiempos
+de
+presentación,
+puntos
+requeridos)
+(Valor 8
+puntos)
+(despliegue en
+cloud, ejecución
+kafka, conexión con
+Oracle Cloud,
+funcionamiento,
+características,
+diseño,
+funcionalidades de
+todas las
+integraciones.
+Dominio del tema,
+Que el desarrollo
+sea correcto,
+Cumplimiento de
+los tiempos de
+presentación,
+puntos requeridos)
+(Valor 6 puntos)
+(despliegue en
+cloud,
+ejecución
+kafka,
+conexión con
+Oracle Cloud,
+funcionamient
+o,
+características
+, diseño,
+funcionalidade
+s de todas las
+integraciones.
+Dominio del
+tema, Que el
+desarrollo sea
+correcto,
+Cumplimiento
+de los tiempos
+de
+presentación,
+puntos
+requeridos)
+(Valor 3
+puntos)
+No elabora la
+presentación
+mediante el
+vídeo.
+(Valor 0
+puntos)
+Reservados todos los derechos Fundación Instituto Profesional Duoc UC. No se permite copiar, reproducir,
+reeditar, descargar, publicar, emitir, difundir, de forma total o parcial la presente obra, ni su incorporación a un
+sistema informático, ni su transmisión en cualquier forma o por cualquier medio (electrónico, mecánico,
+fotocopia, grabación u otros) sin autorización previa y por escrito de Fundación Instituto Profesional Duoc UC
+La infracción de dichos derechos puede constituir un delito contra la propiedad intelectual.
