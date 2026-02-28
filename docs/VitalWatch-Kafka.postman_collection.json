@@ -1,0 +1,231 @@
+{
+	"info": {
+		"_postman_id": "kafka-vitalwatch-2026",
+		"name": "VitalWatch - Apache Kafka",
+		"description": "Colección completa para probar el sistema de streaming con Apache Kafka",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Stream Generator (Producer 1)",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/stream/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "v1", "stream", "health"]
+						}
+					}
+				},
+				{
+					"name": "Get Stream Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/stream/status",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "v1", "stream", "status"]
+						}
+					}
+				},
+				{
+					"name": "Start Stream",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/stream/start",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "v1", "stream", "start"]
+						}
+					}
+				},
+				{
+					"name": "Stop Stream",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/stream/stop",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "v1", "stream", "stop"]
+						}
+					}
+				},
+				{
+					"name": "Send Manual Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/stream/send-manual",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "v1", "stream", "send-manual"]
+						}
+					}
+				},
+				{
+					"name": "Get Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/api/v1/stream/stats",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["api", "v1", "stream", "stats"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Alert Processor (Producer 2)",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/processor/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "v1", "processor", "health"]
+						}
+					}
+				},
+				{
+					"name": "Get Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/processor/stats",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "v1", "processor", "stats"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Summary Generator (Consumer 2)",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/summary/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "v1", "summary", "health"]
+						}
+					}
+				},
+				{
+					"name": "Generate Daily Summary (Today)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/summary/generate",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "v1", "summary", "generate"]
+						}
+					}
+				},
+				{
+					"name": "Generate Daily Summary (Specific Date)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/summary/generate?fecha=2026-02-13",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "v1", "summary", "generate"],
+							"query": [
+								{
+									"key": "fecha",
+									"value": "2026-02-13"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Daily Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/summary/daily/2026-02-13",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "v1", "summary", "daily", "2026-02-13"]
+						}
+					}
+				},
+				{
+					"name": "Get All Summaries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/summary/all",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["api", "v1", "summary", "all"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Kafka UI",
+			"item": [
+				{
+					"name": "Kafka UI Home",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080"
+						}
+					}
+				}
+			]
+		}
+	]
+}

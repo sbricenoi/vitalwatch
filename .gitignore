@@ -8,6 +8,7 @@
 
 # Oracle Wallet (contiene credenciales)
 Wallet_S58ONUXCX4C1QXE9/
+**/wallet/
 *.zip
 *.sso
 *.jks
