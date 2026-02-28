@@ -1,215 +1,93 @@
-# 🏥 VitalWatch - Sistema de Monitoreo y Alertas de Signos Vitales
+# 🏥 VitalWatch - Sistema de Monitoreo Hospitalario
 
-Sistema Cloud Native para monitoreo en tiempo real de signos vitales de pacientes hospitalizados con generación automática de alertas médicas.
-
-## 🌐 Despliegue en Producción
-
-**Estado:** ✅ DESPLEGADO EN AZURE
-
-| Servicio | URL de Producción | Estado |
-|----------|------------------|--------|
-| **Frontend** | [https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io](https://vitalwatch-frontend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/) | ✅ Running |
-| **Backend API** | [https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io](https://vitalwatch-backend.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/) | ✅ Running |
-| **API Gateway** | [https://vitalwatch-api-gateway.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io](https://vitalwatch-api-gateway.graycoast-fc35a2d0.southcentralus.azurecontainerapps.io/) | ✅ Running |
-
-**Infraestructura:**
-- **Cloud Provider:** Microsoft Azure (South Central US)
-- **Servicios:** Azure Container Apps, ACR, Key Vault
-- **Base de Datos:** Oracle Cloud Autonomous Database
-- **Arquitectura:** Microservicios con auto-scaling (1-3 réplicas)
+Sistema de monitoreo en tiempo real de signos vitales con arquitectura de microservicios, implementado con **RabbitMQ** y **Apache Kafka**.
 
 ---
 
-## 📋 Tabla de Contenidos
+## 📊 Descripción del Proyecto
 
-- [Descripción](#-descripción)
-- [Arquitectura](#-arquitectura)
-- [Apache Kafka Integration](#-apache-kafka-integration-new)
-- [Stack Tecnológico](#-stack-tecnológico)
-- [Inicio Rápido](#-inicio-rápido)
-- [Documentación](#-documentación)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Endpoints API](#-endpoints-api)
-- [Credenciales de Prueba](#-credenciales-de-prueba)
+VitalWatch es un sistema de monitoreo hospitalario que procesa signos vitales de pacientes en tiempo real, detecta anomalías, genera alertas y persiste datos en Oracle Cloud Database.
 
----
+### 🎯 Características Principales
 
-## 📖 Descripción
-
-**VitalWatch** es un sistema integral de monitoreo hospitalario que permite:
-
-- ✅ Gestión completa de pacientes hospitalizados
-- ✅ Registro de signos vitales en tiempo real
-- ✅ Generación automática de alertas médicas
-- ✅ Dashboard con estadísticas y métricas
-- ✅ Sistema de autenticación con roles (Admin, Médico, Enfermera)
-- ✅ API RESTful documentada con OpenAPI/Swagger
-- ✅ Base de datos Oracle Cloud Autonomous Database
+- ✅ **Monitoreo en tiempo real** de signos vitales
+- ✅ **Detección automática de anomalías** con algoritmos de ML
+- ✅ **Generación de alertas** por severidad (Baja, Media, Alta, Crítica)
+- ✅ **Persistencia en Oracle Cloud** con Spring Data JPA
+- ✅ **Arquitectura de microservicios** escalable
+- ✅ **Doble implementación**: RabbitMQ y Apache Kafka
+- ✅ **Frontend web** interactivo con Angular
+- ✅ **API Gateway** con Kong
+- ✅ **Containerización** con Docker
 
 ---
 
 ## 🏗️ Arquitectura
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         FRONTEND                                 │
-│                    Angular 17 + Bootstrap 5                      │
-│                     http://localhost:4200                        │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      API GATEWAY                                 │
-│                    Kong (Rate Limiting,                          │
-│                  CORS, Security Headers)                         │
-│                     http://localhost:8000                        │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        BACKEND                                   │
-│                  Spring Boot 3.2 + Java 17                       │
-│                     http://localhost:8080                        │
-│                                                                   │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
-│  │ Controllers  │  │   Services   │  │ Repositories │          │
-│  └──────────────┘  └──────────────┘  └──────────────┘          │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                       DATABASE                                   │
-│              Oracle Cloud Autonomous Database                    │
-│                    (s58onuxcx4c1qxe9)                           │
-│                  Santiago, Chile Region                          │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### Flujo de Datos
+### Sistema RabbitMQ (Semanas 1-7)
 
 ```
-Usuario → Frontend → API Gateway → Backend → Oracle DB
-                                      ↓
-                                  Validación
-                                      ↓
-                              Generación de Alertas
-                                      ↓
-                                  Response
+┌─────────────┐     ┌─────────────┐     ┌──────────────┐
+│  Frontend   │────▶│ API Gateway │────▶│   Backend    │
+│  (Angular)  │     │   (Kong)    │     │ (Spring Boot)│
+└─────────────┘     └─────────────┘     └──────────────┘
+                                               │
+                                               ▼
+┌──────────────────────────────────────────────────────────┐
+│                       RabbitMQ                            │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+│  │  Queue   │  │  Queue   │  │  Queue   │              │
+│  │  Signos  │  │ Anomalías│  │ Resumen  │              │
+│  └──────────┘  └──────────┘  └──────────┘              │
+└──────────────────────────────────────────────────────────┘
+       │                │              │
+       ▼                ▼              ▼
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│  Producer   │  │  Producer   │  │  Consumer   │
+│  Anomaly    │  │  Summary    │  │     DB      │
+└─────────────┘  └─────────────┘  └─────────────┘
+                                         │
+                                         ▼
+                            ┌────────────────────────┐
+                            │  Oracle Cloud Database │
+                            └────────────────────────┘
 ```
 
----
-
-## 🚀 Apache Kafka Integration (NEW)
-
-VitalWatch ahora incluye un sistema de streaming en tiempo real con Apache Kafka para procesamiento continuo de signos vitales.
-
-### Arquitectura Kafka
+### Sistema Kafka (Semana 8)
 
 ```
-┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
-│ Stream Generator │ ───► │  Kafka Cluster   │ ───► │ Alert Processor  │
-│  (Producer 1)    │      │  (3 Brokers)     │      │  (Producer 2)    │
-│  :8081           │      │  + Kafka UI      │      │  :8082           │
-│                  │      │  :8080           │      │                  │
-│ • Genera signos  │      │                  │      │ • Detecta        │
-│   cada 1 seg     │      │ Topics:          │      │   anomalías      │
-│ • 5 pacientes    │      │ - signos-vitales │      │ • Publica        │
-│ • CRON scheduler │      │ - alertas        │      │   alertas        │
-└──────────────────┘      └──────────────────┘      └──────────────────┘
-                                   │
-                    ┌──────────────┴──────────────┐
-                    │                             │
-         ┌──────────▼────────┐         ┌─────────▼─────────┐
-         │ Database Saver    │         │ Summary Generator │
-         │  (Consumer 1)     │         │  (Consumer 2)     │
-         │                   │         │  :8083            │
-         │ • Guarda signos   │         │                   │
-         │   vitales en BD   │         │ • Resúmenes       │
-         │ • Guarda alertas  │         │   diarios         │
-         │ • Oracle Cloud    │         │ • CRON medianoche │
-         └───────────────────┘         └───────────────────┘
-                    │
-         ┌──────────▼────────┐
-         │  Oracle Cloud DB  │
-         │                   │
-         │ • SIGNOS_VITALES  │
-         │   _KAFKA          │
-         │ • ALERTAS_KAFKA   │
-         │ • RESUMEN_DIARIO  │
-         │   _KAFKA          │
-         └───────────────────┘
+┌────────────────────┐
+│ Stream Generator   │ Genera signos vitales cada 1s
+└─────────┬──────────┘
+          │ Produce
+          ▼
+┌─────────────────────────────────────────────────────────┐
+│               KAFKA CLUSTER                              │
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐       │
+│  │  Broker 1  │  │  Broker 2  │  │  Broker 3  │       │
+│  └────────────┘  └────────────┘  └────────────┘       │
+│  Topic: signos-vitales-stream (3 partitions)           │
+│  Topic: alertas-medicas (3 partitions)                 │
+└─────────────────────────────────────────────────────────┘
+          │ Consume
+          ▼
+┌────────────────────┐
+│ Alert Processor    │ Detecta anomalías
+└─────────┬──────────┘
+          │ Produce alertas
+          ▼
+    ┌─────────┴─────────┐
+    ▼                   ▼
+┌──────────────┐  ┌──────────────┐
+│ DB Saver     │  │ Summary Gen  │
+└──────┬───────┘  └──────┬───────┘
+       │                 │
+       └────────┬────────┘
+                ▼
+    ┌─────────────────────┐
+    │ Oracle Cloud Database│
+    └─────────────────────┘
 ```
-
-### Inicio Rápido Kafka
-
-```bash
-# 1. Iniciar cluster Kafka
-./start-kafka-cluster.sh
-
-# 2. Crear tópicos
-./create-kafka-topics.sh
-
-# 3. Crear tablas en Oracle
-# Ejecutar: database/create_tables_kafka.sql
-
-# 4. Iniciar microservicios
-docker-compose -f docker-compose-kafka.yml up -d
-
-# 5. Iniciar stream
-curl -X POST http://localhost:8081/api/v1/stream/start
-
-# 6. Ver Kafka UI
-# Abrir: http://localhost:8080
-```
-
-### Documentación Kafka
-
-- 📖 [README_KAFKA.md](README_KAFKA.md) - Guía completa de Kafka
-- 🏗️ [docs/ARQUITECTURA_KAFKA.md](docs/ARQUITECTURA_KAFKA.md) - Arquitectura detallada
-- 🧪 [GUIA_PRUEBAS_KAFKA.md](GUIA_PRUEBAS_KAFKA.md) - Guía de pruebas
-- 🎥 [DIALOGO_PRESENTACION_KAFKA.md](DIALOGO_PRESENTACION_KAFKA.md) - Guión para video
-- 📋 [PLAN_KAFKA_SEMANA8.md](PLAN_KAFKA_SEMANA8.md) - Plan de implementación
-
-### Características Kafka
-
-- ✅ Cluster de 3 brokers + 3 Zookeepers
-- ✅ 2 tópicos: `signos-vitales-stream` y `alertas-medicas`
-- ✅ Stream continuo (1 mensaje/segundo = 86,400 mensajes/día)
-- ✅ Detección de anomalías en tiempo real
-- ✅ Persistencia en Oracle Cloud
-- ✅ Resúmenes diarios automáticos
-- ✅ Kafka UI para monitoreo visual
-- ✅ Consumer groups independientes
-- ✅ Replicación de datos (RF=2)
-
----
-
-## 🛠️ Stack Tecnológico
-
-### Backend
-- **Framework**: Spring Boot 3.2.0
-- **Lenguaje**: Java 17
-- **ORM**: Spring Data JPA
-- **Base de Datos**: Oracle Autonomous Database (19c)
-- **Documentación API**: SpringDoc OpenAPI 3
-- **Seguridad**: Spring Security
-- **Build**: Maven
-
-### Frontend
-- **Framework**: Angular 17
-- **UI**: Bootstrap 5 + Bootstrap Icons
-- **HTTP Client**: Angular HttpClient
-- **Routing**: Angular Router con Lazy Loading
-- **Forms**: Reactive Forms
-
-### API Gateway
-- **Gateway**: Kong 3.4
-- **Plugins**: CORS, Rate Limiting, Security Headers, Logging
-
-### DevOps
-- **Containerización**: Docker + Docker Compose
-- **Servidor Web**: Nginx (para frontend)
-- **Scripts**: Bash
 
 ---
 
@@ -217,67 +95,46 @@ curl -X POST http://localhost:8081/api/v1/stream/start
 
 ### Prerrequisitos
 
-- Docker Desktop instalado y ejecutándose
-- 4GB RAM mínimo disponible
-- Puertos libres: 4200, 8080, 8000
+- Docker y Docker Compose
+- Java 17
+- Maven 3.9+
+- Node.js 18+ (para frontend)
+- Oracle Cloud Database (configurado)
 
-### Instalación en 1 Comando
-
-```bash
-./deploy.sh
-```
-
-Este script automáticamente:
-1. ✅ Verifica prerrequisitos (Docker, Wallet Oracle)
-2. ✅ Construye las imágenes Docker
-3. ✅ Levanta todos los servicios
-4. ✅ Ejecuta health checks
-5. ✅ Muestra las URLs de acceso
-
-### Acceso a la Aplicación
-
-Una vez iniciado, accede a:
-
-- **Frontend**: http://localhost:4200
-- **Backend API**: http://localhost:8080
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
-- **API Gateway**: http://localhost:8000
-
----
-
-## 📚 Documentación
-
-### Documentos Principales
-
-1. **[Guía de Integración](docs/GUIA_INTEGRACION.md)** - Setup completo y configuración
-2. **[Arquitectura del Sistema](docs/arquitectura.md)** - Diagramas y diseño técnico
-3. **[Guía de Postman](docs/guia-postman.md)** - Testing de API
-4. **[Guía Oracle Cloud](docs/guia-oracle-cloud.md)** - Configuración de BD
-
-### 🔷 Despliegue en Azure (Nuevo!)
-
-- **[AZURE_INDEX.md](AZURE_INDEX.md)** - 📚 Índice maestro de documentación Azure
-- **[AZURE_README.md](AZURE_README.md)** - ⚡ Guía rápida y comandos comunes
-- **[Resumen Ejecutivo](docs/AZURE_RESUMEN_EJECUTIVO.md)** - 📊 Visión general y costos
-- **[Guía Completa Azure](docs/GUIA_DESPLIEGUE_AZURE.md)** - 📖 Despliegue paso a paso
-- **[Checklist Azure](docs/AZURE_CHECKLIST.md)** - ✅ Lista de verificación
-- **[Comparación Opciones](docs/AZURE_COMPARACION_OPCIONES.md)** - ⚖️ Análisis de alternativas
-
-#### 🚀 Despliegue Rápido en Azure
+### Opción 1: Sistema RabbitMQ
 
 ```bash
-# Despliegue automatizado completo
-./deploy-azure.sh
+# Clonar repositorio
+git clone https://github.com/sbricenoi/vitalwatch.git
+cd vitalwatch
 
-# Tiempo: 1-2 horas
-# Costo: $47-85/mes
+# Cambiar a rama RabbitMQ
+git checkout feature/rabbitmq-integration
+
+# Iniciar sistema completo
+docker-compose up -d
+
+# Acceder
+Frontend:   http://localhost
+Backend:    http://localhost:8080
+RabbitMQ:   http://localhost:15672
 ```
 
-### API Documentation
+### Opción 2: Sistema Kafka
 
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
-- **OpenAPI JSON**: http://localhost:8080/v3/api-docs
-- **Postman Collection**: `docs/postman-collection.json`
+```bash
+# Cambiar a rama Kafka
+git checkout feature/kafka-implementation
+
+# Iniciar sistema completo (automatizado)
+./quick-start-kafka.sh
+
+# Acceder
+Kafka UI:         http://localhost:9000
+Stream Generator: http://localhost:8091
+Alert Processor:  http://localhost:8092
+Summary Generator: http://localhost:8094
+```
 
 ---
 
@@ -285,278 +142,306 @@ Una vez iniciado, accede a:
 
 ```
 vitalwatch/
-├── backend/                    # Spring Boot API
-│   ├── src/main/java/
-│   │   └── com/hospital/vitalwatch/
-│   │       ├── controller/     # REST Controllers
-│   │       ├── service/        # Business Logic
-│   │       ├── repository/     # Data Access
-│   │       ├── model/          # JPA Entities
-│   │       ├── dto/            # Data Transfer Objects
-│   │       ├── config/         # Configuration
-│   │       └── exception/      # Exception Handlers
-│   ├── src/main/resources/
-│   │   └── application.properties
-│   └── pom.xml
 │
-├── frontend/                   # Angular App
-│   ├── src/app/
-│   │   ├── core/              # Services, Guards
-│   │   ├── models/            # TypeScript Interfaces
-│   │   ├── modules/           # Feature Modules
-│   │   │   ├── dashboard/
-│   │   │   ├── pacientes/
-│   │   │   ├── signos-vitales/
-│   │   │   └── alertas/
-│   │   └── shared/            # Shared Components
-│   └── package.json
+├── 🎨 Frontend y Backend
+│   ├── frontend/                    # Angular 17
+│   ├── backend/                     # Spring Boot backend
+│   └── api-manager/                 # Kong API Gateway
 │
-├── api-manager/               # Kong Configuration
-│   └── kong.yml
+├── 🐰 Microservicios RabbitMQ
+│   ├── producer-anomaly-detector/   # Detecta anomalías
+│   ├── producer-summary/            # Genera resúmenes
+│   ├── consumer-db-saver/           # Persiste en Oracle
+│   └── consumer-json-generator/     # Genera JSONs
 │
-├── database/                  # SQL Scripts
-│   ├── schema.sql            # Tablas
-│   ├── data.sql              # Datos de prueba
-│   └── usuarios.sql          # Usuarios del sistema
+├── 📨 Microservicios Kafka
+│   ├── producer-stream-generator/   # Genera streams (1 msg/s)
+│   ├── producer-alert-processor/    # Detecta y alerta
+│   ├── consumer-database-saver/     # Persiste con metadata
+│   └── consumer-summary-generator/  # Resúmenes con scheduler
 │
-├── docs/                     # Documentación
-│   ├── ARQUITECTURA.md
-│   ├── GUIA_INTEGRACION.md
-│   ├── guia-postman.md
-│   └── postman-collection.json
+├── 🗄️ Base de Datos
+│   └── database/
+│       ├── schema.sql               # Tablas RabbitMQ
+│       ├── create_tables_kafka.sql  # Tablas Kafka
+│       └── data.sql                 # Datos de prueba
 │
-├── scripts/                  # Automation Scripts
-│   ├── start.sh
-│   └── stop.sh
+├── 📚 Documentación
+│   └── docs/
+│       ├── ARQUITECTURA.md          # Diseño técnico
+│       ├── GUIA_DEPLOY.md           # Cómo desplegar
+│       ├── GUIA_USO.md              # Cómo usar
+│       ├── postman-collection.json  # Tests RabbitMQ
+│       ├── VitalWatch-Kafka.postman_collection.json
+│       └── evaluacion/              # Pautas y guiones
 │
-├── Wallet_S58ONUXCX4C1QXE9/  # Oracle Cloud Wallet
+├── 🔧 Scripts
+│   └── scripts/
+│       ├── quick-start-kafka.sh           # ⭐ Inicio rápido Kafka
+│       ├── start-kafka-cluster.sh         # Solo cluster
+│       ├── create-kafka-topics.sh         # Crear topics
+│       ├── deploy-kafka-azure-rapido.sh   # Deploy Azure
+│       └── README.md                      # Índice de scripts
 │
-├── docker-compose.yml        # Orquestación de servicios
-├── deploy.sh                 # Script de despliegue
-└── README.md
+├── 🐳 Docker Compose
+│   ├── docker-compose.yml           # Stack RabbitMQ completo
+│   └── docker-compose-kafka.yml     # Stack Kafka completo
+│
+└── 📄 Configuración
+    ├── .gitignore
+    ├── Wallet_S58ONUXCX4C1QXE9/     # Oracle Wallet
+    └── README.md                     # Este archivo
 ```
 
 ---
 
-## 🔌 Endpoints API
+## 🛠️ Tecnologías Utilizadas
 
-### Autenticación
-```
-POST   /api/v1/auth/login              # Login
-GET    /api/v1/auth/check              # Verificar sesión
-GET    /api/v1/auth/credentials        # Credenciales de prueba
-```
+### Backend
+- **Spring Boot 3.2.1** - Framework principal
+- **Spring Data JPA** - ORM
+- **Spring AMQP** - RabbitMQ integration
+- **Spring Kafka** - Kafka integration
+- **Lombok** - Reduce boilerplate
 
-### Pacientes
-```
-GET    /api/v1/pacientes               # Listar todos
-GET    /api/v1/pacientes/{id}          # Obtener por ID
-GET    /api/v1/pacientes/estado/{estado}  # Filtrar por estado
-GET    /api/v1/pacientes/sala/{sala}   # Filtrar por sala
-GET    /api/v1/pacientes/criticos      # Pacientes críticos
-GET    /api/v1/pacientes/buscar?q=     # Buscar
-POST   /api/v1/pacientes               # Crear
-PUT    /api/v1/pacientes/{id}          # Actualizar
-DELETE /api/v1/pacientes/{id}          # Eliminar
-```
+### Mensajería
+- **RabbitMQ 3.12** - Message broker (sistema principal)
+- **Apache Kafka 7.5.0** - Streaming platform (semana 8)
+- **Zookeeper 7.5.0** - Kafka coordination
 
-### Signos Vitales
-```
-GET    /api/v1/signos-vitales          # Listar todos
-GET    /api/v1/signos-vitales/{id}     # Obtener por ID
-GET    /api/v1/signos-vitales/paciente/{id}  # Por paciente
-GET    /api/v1/signos-vitales/paciente/{id}/ultimo  # Último registro
-GET    /api/v1/signos-vitales/paciente/{id}/ultimos?limite=N  # Últimos N
-POST   /api/v1/signos-vitales          # Registrar
-PUT    /api/v1/signos-vitales/{id}     # Actualizar
-DELETE /api/v1/signos-vitales/{id}     # Eliminar
-```
+### Base de Datos
+- **Oracle Cloud Autonomous Database**
+- **Wallet TCPS** - Conexión segura
 
-### Alertas
-```
-GET    /api/v1/alertas                 # Listar todas
-GET    /api/v1/alertas/{id}            # Obtener por ID
-GET    /api/v1/alertas/activas         # Alertas activas
-GET    /api/v1/alertas/criticas        # Alertas críticas
-GET    /api/v1/alertas/paciente/{id}   # Por paciente
-GET    /api/v1/alertas/paciente/{id}/activas  # Activas por paciente
-GET    /api/v1/alertas/severidad/{severidad}  # Por severidad
-GET    /api/v1/alertas/recientes?limite=N     # Recientes
-POST   /api/v1/alertas                 # Crear manual
-PUT    /api/v1/alertas/{id}/resolver   # Resolver
-PUT    /api/v1/alertas/{id}/descartar  # Descartar
-DELETE /api/v1/alertas/{id}            # Eliminar
-GET    /api/v1/alertas/estadisticas    # Estadísticas
-```
+### Frontend
+- **Angular 17**
+- **Bootstrap 5**
+- **RxJS**
 
-### Dashboard
-```
-GET    /api/v1/dashboard/estadisticas          # Estadísticas generales
-GET    /api/v1/dashboard/pacientes-por-estado  # Distribución
-GET    /api/v1/dashboard/alertas-recientes     # Alertas recientes
-GET    /api/v1/dashboard/pacientes-criticos    # Pacientes críticos
-GET    /api/v1/dashboard/alertas-por-severidad # Distribución severidad
-```
+### Infraestructura
+- **Docker & Docker Compose**
+- **Kong API Gateway**
+- **Kafka UI** - Monitoring
 
-### Health Check
-```
-GET    /api/v1/health                  # Estado de la aplicación
-GET    /api/v1/health/database         # Estado de la BD
-```
+### Cloud
+- **Azure Container Apps** (deployment)
+- **Azure Event Hubs** (Kafka-compatible)
+- **Azure Container Registry**
 
 ---
 
-## 🔐 Credenciales de Prueba
+## 📊 Microservicios
 
-### Usuarios del Sistema
+### Sistema RabbitMQ
 
-| Rol | Email | Password | Permisos |
-|-----|-------|----------|----------|
-| **Admin** | admin@vitalwatch.com | Admin123! | Acceso total |
-| **Médico** | medico@vitalwatch.com | Medico123! | Lectura/Escritura |
-| **Enfermera** | enfermera@vitalwatch.com | Enfermera123! | Registro de signos |
+| Microservicio | Puerto | Descripción |
+|---------------|--------|-------------|
+| **Backend** | 8080 | API principal, manejo de signos vitales |
+| **Producer Anomaly** | 8081 | Detecta anomalías en signos vitales |
+| **Producer Summary** | 8082 | Genera resúmenes diarios |
+| **Consumer DB** | N/A | Persiste datos en Oracle |
+| **Consumer JSON** | N/A | Genera archivos JSON |
+| **Frontend** | 80/443 | Interfaz web Angular |
+| **API Gateway** | 8000 | Kong gateway |
+| **RabbitMQ** | 5672/15672 | Message broker + UI |
 
-### Base de Datos Oracle
+### Sistema Kafka
 
-- **Usuario**: ADMIN
-- **Password**: `$-123.Sb-123`
-- **Service**: s58onuxcx4c1qxe9_high
-- **Region**: Santiago, Chile
+| Microservicio | Puerto | Descripción |
+|---------------|--------|-------------|
+| **Stream Generator** | 8091 | Genera signos vitales (1 msg/s) |
+| **Alert Processor** | 8092 | Detecta y publica alertas |
+| **Database Saver** | 8093 | Persiste en Oracle (2 consumers) |
+| **Summary Generator** | 8094 | Resúmenes con scheduler |
+| **Kafka UI** | 9000 | Interfaz de monitoreo |
+| **Zookeeper 1-3** | 2181-2183 | Coordinación |
+| **Kafka 1-3** | 19092-19094 | Brokers |
+
+---
+
+## 🗄️ Base de Datos
+
+### Tablas RabbitMQ
+
+- `SIGNOS_VITALES` - Registro de signos vitales
+- `ANOMALIAS` - Anomalías detectadas
+- `PACIENTES` - Catálogo de pacientes
+- `RESUMEN_DIARIO` - Resúmenes por día
+
+### Tablas Kafka
+
+- `SIGNOS_VITALES_KAFKA` - Con metadatos Kafka (topic, partition, offset)
+- `ALERTAS_KAFKA` - Alertas con severidad
+- `RESUMEN_DIARIO_KAFKA` - Agregaciones automáticas
+- `PACIENTES_MONITOREADOS_KAFKA` - Stats en tiempo real
 
 ---
 
 ## 🧪 Testing
 
-### Pruebas con Postman
+### Postman Collections
 
-1. Importar colección: `docs/postman-collection.json`
-2. Configurar variables de entorno
-3. Ejecutar tests automáticos
+Disponibles en `docs/`:
+- `VitalWatch.postman_collection.json` (RabbitMQ)
+- `VitalWatch-Kafka.postman_collection.json` (Kafka)
 
-### Pruebas Manuales
+### Pruebas Automatizadas
 
-1. **Login**: Acceder con credenciales de prueba
-2. **Crear Paciente**: Formulario con validación de RUT
-3. **Registrar Signos Vitales**: Con generación automática de alertas
-4. **Ver Dashboard**: Estadísticas en tiempo real
-5. **Gestionar Alertas**: Resolver/Descartar alertas activas
+```bash
+# RabbitMQ
+curl http://localhost:8080/actuator/health
+curl http://localhost:8081/api/anomalies/stats
+curl http://localhost:8082/api/summary/today
 
----
-
-## 📊 Modelo de Datos
-
-### Entidades Principales
-
+# Kafka
+curl http://localhost:8091/api/v1/stream/stats
+curl http://localhost:8092/api/v1/processor/stats
+curl http://localhost:8094/api/v1/summary/today
 ```
-PACIENTES
-├── id (PK)
-├── nombre, apellido, rut
-├── fecha_nacimiento, edad, genero
-├── sala, cama, estado
-├── diagnostico
-└── fecha_ingreso, fecha_alta
 
-SIGNOS_VITALES
-├── id (PK)
-├── paciente_id (FK)
-├── frecuencia_cardiaca
-├── presion_sistolica, presion_diastolica
-├── temperatura
-├── saturacion_oxigeno
-├── frecuencia_respiratoria
-├── estado_conciencia
-├── registrado_por
-└── fecha_registro
+### Queries Oracle
 
-ALERTAS
-├── id (PK)
-├── paciente_id (FK)
-├── tipo, mensaje, severidad
-├── estado (ACTIVA, RESUELTA, DESCARTADA)
-├── fecha_creacion, fecha_resolucion
-└── resuelto_por, notas_resolucion
+```sql
+-- Ver últimos signos vitales
+SELECT * FROM SIGNOS_VITALES_KAFKA 
+ORDER BY timestamp_medicion DESC 
+FETCH FIRST 10 ROWS ONLY;
 
-USUARIOS
-├── id (PK)
-├── nombre, email
-├── password_hash
-├── rol (ADMIN, MEDICO, ENFERMERA)
-└── activo
+-- Ver alertas críticas
+SELECT * FROM ALERTAS_KAFKA 
+WHERE severidad = 'CRITICA' 
+ORDER BY timestamp_alerta DESC;
+
+-- Resumen diario
+SELECT * FROM RESUMEN_DIARIO_KAFKA 
+WHERE fecha = CURRENT_DATE;
 ```
 
 ---
 
-## 🛑 Detener la Aplicación
+## 🚢 Deployment
+
+### Local (Docker Compose)
 
 ```bash
-./scripts/stop.sh
+# RabbitMQ
+docker-compose up -d
+
+# Kafka
+./quick-start-kafka.sh
 ```
 
-O manualmente:
+### Azure Container Apps
 
 ```bash
-docker-compose down
+# Configurar Azure CLI
+az login
+
+# Deploy RabbitMQ (si aplica)
+./deploy-azure.sh
+
+# Deploy Kafka
+./deploy-kafka-azure-rapido.sh
+```
+
+Ver `docs/GUIA_DEPLOY.md` para detalles completos.
+
+---
+
+## 📈 Monitoreo
+
+### RabbitMQ Management UI
+- URL: http://localhost:15672
+- Usuario: `guest`
+- Password: `guest`
+
+### Kafka UI
+- URL: http://localhost:9000
+- Sin autenticación en local
+- Visualiza: Topics, Brokers, Consumer Groups, Messages
+
+### Health Checks
+
+Todos los microservicios exponen `/actuator/health`:
+```bash
+curl http://localhost:8080/actuator/health
 ```
 
 ---
 
-## 🐛 Troubleshooting
+## 🔧 Configuración
 
-### Puerto ya en uso
-```bash
-# Verificar puertos ocupados
-lsof -i :4200
-lsof -i :8080
-lsof -i :8000
+### Variables de Entorno Principales
 
-# Detener servicios anteriores
-docker-compose down
+```env
+# Oracle Database
+ORACLE_DB_URL=jdbc:oracle:thin:@...
+ORACLE_DB_USERNAME=ADMIN
+ORACLE_DB_PASSWORD=your-password
+
+# RabbitMQ
+RABBITMQ_HOST=rabbitmq
+RABBITMQ_PORT=5672
+
+# Kafka
+KAFKA_BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
 ```
 
-### Error de conexión a Oracle
-```bash
-# Verificar que el Wallet existe
-ls -la Wallet_S58ONUXCX4C1QXE9/
+Ver archivos `application.properties` y `application-docker.properties` en cada microservicio.
 
-# Revisar logs del backend
-docker-compose logs backend
-```
+---
 
-### Frontend no carga
-```bash
-# Limpiar caché del navegador
-Ctrl+Shift+R (Windows/Linux)
-Cmd+Shift+R (Mac)
+## 📚 Documentación Adicional
 
-# Reconstruir frontend
-docker-compose build frontend
-docker-compose up -d frontend
-```
+- **[Arquitectura Técnica](docs/ARQUITECTURA.md)** - Diseño detallado del sistema
+- **[Guía de Deployment](docs/GUIA_DEPLOY.md)** - Cómo desplegar a producción
+- **[Guía de Uso](docs/GUIA_USO.md)** - Manual de usuario y APIs
+
+---
+
+## 👥 Equipo
+
+**Desarrollador:** Sebastián Briceño  
+**Institución:** DuocUC  
+**Curso:** Cloud Native - Semana 8  
+**Profesor:** [Nombre del profesor]
 
 ---
 
 ## 📝 Licencia
 
-Proyecto académico - DUOC UC  
-Asignatura: Cloud Native Development  
-Año: 2026
+Este proyecto es parte de un trabajo académico para DuocUC.
 
 ---
 
-## 👥 Autor
+## 🔗 Enlaces
 
-Desarrollado como proyecto sumativo para la asignatura de Desarrollo Cloud Native.
-
----
-
-## 🔗 Enlaces Útiles
-
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [Angular Documentation](https://angular.io/docs)
-- [Oracle Cloud Documentation](https://docs.oracle.com/en-us/iaas/Content/home.htm)
-- [Kong Gateway Documentation](https://docs.konghq.com/)
-- [Docker Documentation](https://docs.docker.com/)
+- **GitHub:** https://github.com/sbricenoi/vitalwatch
+- **Ramas:**
+  - `main` - Rama principal
+  - `feature/rabbitmq-integration` - Sistema RabbitMQ
+  - `feature/kafka-implementation` - Sistema Kafka
 
 ---
 
-**¿Necesitas ayuda?** Revisa la [Guía de Integración](docs/GUIA_INTEGRACION.md) para instrucciones detalladas.
+## 🎓 Presentación
+
+Para presentación del proyecto, consultar:
+- Código completo en GitHub
+- Sistema funcionando localmente
+- Documentación en `docs/`
+- Postman collections en `docs/`
+
+---
+
+## 📊 Estadísticas del Proyecto
+
+- **Líneas de código:** ~13,000
+- **Microservicios:** 12 (8 RabbitMQ + 4 Kafka)
+- **Tablas Oracle:** 8
+- **APIs REST:** 25+ endpoints
+- **Tiempo desarrollo:** ~40 horas
+
+---
+
+**¿Preguntas?** Revisar documentación en `docs/` o contactar al equipo.
